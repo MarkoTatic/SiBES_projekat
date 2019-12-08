@@ -11,7 +11,6 @@ C:\Users\buduc\OneDrive\Documents\GitHub\SiBES_projekat\Project46\Common\obj\Deb
 C:\Users\buduc\OneDrive\Documents\GitHub\SiBES_projekat\Project46\Common\obj\Debug\Common.pdb
 C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\bin\Debug\Common.dll
 C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\bin\Debug\Common.pdb
-C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.csprojAssemblyReference.cache
 C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
 C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.dll
 C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.pdb

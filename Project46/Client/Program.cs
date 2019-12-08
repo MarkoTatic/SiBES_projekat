@@ -23,7 +23,7 @@ namespace Client
             }
             catch
             {
-                Console.WriteLine("You didn't enter a valid option. Please try againg.");
+                Console.WriteLine("You didn't enter a valid option. Please try again.");
             }
             return val;
         }
