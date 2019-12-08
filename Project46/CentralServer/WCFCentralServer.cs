@@ -9,9 +9,9 @@ namespace CentralServer
 {
     public class WCFCentralServer : IWCFCentralServer
     {
-        public void printInfo()
+        public string printInfo()
         {
-            Console.WriteLine("Connected to new client.");
+            return "Succesfully connected.";
         }
     }
 }
