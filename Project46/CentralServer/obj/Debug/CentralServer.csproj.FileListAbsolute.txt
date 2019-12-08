@@ -38,3 +38,5 @@ C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\CentralServer\obj\Debug
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\CentralServer\obj\Debug\CentralServer.pdb
 C:\Users\Natasas\Desktop\SiBES_projekat\Project46\CentralServer\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Natasas\Desktop\SiBES_projekat\Project46\CentralServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\CentralServer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\CentralServer\bin\Debug\Newtonsoft.Json.xml

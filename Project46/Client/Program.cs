@@ -34,7 +34,7 @@ namespace Client
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:5000/WCFCentralServer";
             string users = String.Empty;
-            int m = Menu();
+            
             WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
             try
             {
@@ -43,6 +43,7 @@ namespace Client
             {
                 throw new FaultException(e.Message);
             }
+            int m = Menu();
             if (m == 1)
             {
                 try
