@@ -1,4 +1,5 @@
 ﻿using Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Client
 {
     public class Program
     {
+        private static int i = 1;
         private static int Menu()
         {
             Console.WriteLine("Choose option by entering number: ");
@@ -30,7 +32,6 @@ namespace Client
         {
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:5000/WCFCentralServer";
-            List<User> connectedClients = new List<User>();
             string users = String.Empty;
             int m = Menu();
             WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
@@ -51,18 +52,37 @@ namespace Client
                 {
                     throw new FaultException(e.Message);
                 }
-            } 
-            
 
-            foreach (var client in connectedClients)
-            {
-                Console.WriteLine(client.SID);
-                Console.WriteLine(client.Name);
-                Console.WriteLine("-------------");
             }
-            Console.WriteLine(users);
+
+            DeserializeJson(users);
+            int otherClient = PrintConnectedClients();
 
             Console.ReadKey();
+        }
+
+        private static void DeserializeJson(string users)
+        {
+            List<User> listUsers = JsonConvert.DeserializeObject<List<User>>(users);
+            int i = 1;
+            foreach (User item in listUsers)
+            {
+                DBClients.connectedClients.Add(i, item);
+                i++;
+            }
+        }
+
+        private static int PrintConnectedClients()
+        {
+            Console.WriteLine("Connected clients at the moment are: ");
+            foreach (User item in DBClients.connectedClients.Values)
+            {
+                Console.WriteLine(i +". "+ item.Name + ", SID: " + item.SID);
+                i++;
+            }
+            Console.WriteLine("Please choose a client you want to connect with by picking ordinal number.");
+            int retVal = Int32.Parse(Console.ReadLine());
+            return retVal;
         }
     }
 }

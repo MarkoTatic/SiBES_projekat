@@ -36,3 +36,5 @@ C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client.csproj.CopyComplete
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client.exe
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client.pdb
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Newtonsoft.Json.xml

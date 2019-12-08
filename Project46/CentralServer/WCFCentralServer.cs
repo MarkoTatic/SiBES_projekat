@@ -1,4 +1,5 @@
 ﻿using Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +15,16 @@ namespace CentralServer
         //private static List<User> ConnectedClients = new List<User>();
         public string GetConnectedClients()
         {
-            string ret = string.Empty;
+            /*string ret = string.Empty;
             foreach (var user in DBClients.ConnectedClients)
             {
                 ret += user.Name;
-                ret += "\n";
+                ret += "|";
                 ret += user.SID;
                 ret += "\n";
-            }
-            return ret;
+            }*/
+            string jsonString = JsonConvert.SerializeObject(DBClients.ConnectedClients);
+            return jsonString;
         }
 
         public string TestConnection()
@@ -42,7 +44,7 @@ namespace CentralServer
             //    Console.WriteLine("{0}", name.ToString());
             //}
 
-            User user = new User(Formatter.ParseName(identity.Name), winIdentity.User);
+            User user = new User(Formatter.ParseName(identity.Name), winIdentity.User.ToString());
             DBClients.ConnectedClients.Add(user);
 
             return "Succesfully connected.";

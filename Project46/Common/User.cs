@@ -12,7 +12,7 @@ namespace Common
     public class User
     {
         [DataMember]
-        public SecurityIdentifier SID { get; set; }
+        public string SID { get; set; }
         [DataMember]
         public string Name { get; set; }
 
@@ -22,10 +22,10 @@ namespace Common
             Name = string.Empty;
         }
 
-        public User(string v, SecurityIdentifier user)
+        public User(string name, string sid)
         {
-            this.Name = v;
-            this.SID = user;
+            this.Name = name;
+            this.SID = sid;
         }
     }
 }
