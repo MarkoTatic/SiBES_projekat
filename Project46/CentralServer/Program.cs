@@ -19,7 +19,7 @@ namespace CentralServer
             host.AddServiceEndpoint(typeof(IWCFCentralServer), binding, address);
             host.Open();
 
-            Console.ReadLine();
+            Console.ReadKey();
             host.Close();
         }
     }

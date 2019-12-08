@@ -11,10 +11,10 @@ namespace CentralServer
 {
     public class WCFCentralServer : IWCFCentralServer
     {
-        public static List<User> ConnectedClients = new List<User>();
+        //private static List<User> ConnectedClients = new List<User>();
         public List<User> GetConnectedClients()
         {
-            return ConnectedClients;
+            return DBClients.ConnectedClients;
         }
 
         public string TestConnection()
@@ -34,8 +34,8 @@ namespace CentralServer
             //    Console.WriteLine("{0}", name.ToString());
             //}
 
-            var User = new User { Name = Formatter.ParseName(identity.Name), SID = winIdentity.User };
-            ConnectedClients.Add(User);
+            User user = new User(Formatter.ParseName(identity.Name), winIdentity.User);
+            DBClients.ConnectedClients.Add(user);
 
             return "Succesfully connected.";
         }

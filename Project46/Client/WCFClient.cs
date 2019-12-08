@@ -20,15 +20,16 @@ namespace Client
 
         public List<User> GetConnectedClients()
         {
-            List<User> connectedClients = new List<User>();
+            List<User> users = new List<User>();
             try
             {
-                connectedClients = factory.GetConnectedClients();
-            } catch(Exception e)
-            {
-                Console.WriteLine("Exception details:" + e.Message);
+                users = factory.GetConnectedClients();
             }
-            return connectedClients;
+            catch (FaultException e)
+            {
+                throw new FaultException(e.Message);
+            }
+            return users;
         }
 
         public string TestConnection()

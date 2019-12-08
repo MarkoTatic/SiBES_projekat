@@ -32,15 +32,26 @@ namespace Client
             string address = "net.tcp://localhost:5000/WCFCentralServer";
             List<User> connectedClients = new List<User>();
             int m = Menu();
-            using (WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address))))
+            WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
+            try
             {
-                Console.WriteLine(proxy.TestConnection()); 
-                
-                if(m == 1)
-                {   
-                    connectedClients = proxy.GetConnectedClients(); 
-                }
+                Console.WriteLine(proxy.TestConnection());
+            } catch (FaultException e)
+            {
+                throw new FaultException(e.Message);
             }
+            if (m == 1)
+            {
+                try
+                {
+                    connectedClients = proxy.GetConnectedClients();
+                }
+                catch (FaultException e)
+                {
+                    throw new FaultException(e.Message);
+                }
+            } 
+            
 
             foreach (var client in connectedClients)
             {
@@ -48,7 +59,7 @@ namespace Client
                 Console.WriteLine(client.Name);
                 Console.WriteLine("-------------");
             }
-            Console.ReadLine();
+            Console.ReadKey();
         }
     }
 }
