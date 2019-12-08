@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -29,18 +30,24 @@ namespace Client
         {
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:5000/WCFCentralServer";
-
+            List<User> connectedClients = new List<User>();
             int m = Menu();
             using (WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address))))
             {
-                //proxy.generateKey();
-                if (m == 1)
-                    Console.WriteLine(proxy.printInfo()); 
-                //proxy.Read();
-                //proxy.Modify();
-               // proxy.Delete();
+                Console.WriteLine(proxy.TestConnection()); 
+                
+                if(m == 1)
+                {   
+                    connectedClients = proxy.GetConnectedClients(); 
+                }
             }
 
+            foreach (var client in connectedClients)
+            {
+                Console.WriteLine(client.SID);
+                Console.WriteLine(client.Name);
+                Console.WriteLine("-------------");
+            }
             Console.ReadLine();
         }
     }

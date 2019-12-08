@@ -18,6 +18,19 @@ namespace Client
             factory = this.CreateChannel();
         }
 
+        public List<User> GetConnectedClients()
+        {
+            List<User> connectedClients = new List<User>();
+            try
+            {
+                connectedClients = factory.GetConnectedClients();
+            } catch(Exception e)
+            {
+                Console.WriteLine("Exception details:" + e.Message);
+            }
+            return connectedClients;
+        }
+
         public string TestConnection()
         {
             string retVal = string.Empty;
