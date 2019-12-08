@@ -1,0 +1,10 @@
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\bin\Debug\CentralServer.exe.config
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\bin\Debug\CentralServer.exe
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\bin\Debug\CentralServer.pdb
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\bin\Debug\Common.dll
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\bin\Debug\Common.pdb
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\obj\Debug\CentralServer.csprojAssemblyReference.cache
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\obj\Debug\CentralServer.csproj.CoreCompileInputs.cache
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\obj\Debug\CentralServer.csproj.CopyComplete
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\obj\Debug\CentralServer.exe
+C:\Users\Natasas\Desktop\sibes\Project46\CentralServer\obj\Debug\CentralServer.pdb
