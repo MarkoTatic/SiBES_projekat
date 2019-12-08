@@ -9,7 +9,7 @@ namespace CentralServer
 {
     public class WCFCentralServer : IWCFCentralServer
     {
-        public string printInfo()
+        public string testConnection()
         {
             return "Succesfully connected.";
         }

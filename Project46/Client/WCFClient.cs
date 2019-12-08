@@ -18,15 +18,15 @@ namespace Client
             factory = this.CreateChannel();
         }
 
-        public string printInfo()
+        public string TestConnection()
         {
             string retVal = string.Empty;
             try
             {
-               retVal = factory.printInfo(); 
+               retVal = factory.TestConnection(); 
             } catch(Exception e)
             {
-                Console.WriteLine("Exception message: " + e.Message);
+                Console.WriteLine("Exception details: " + e.Message);
             }
             return retVal;
         }

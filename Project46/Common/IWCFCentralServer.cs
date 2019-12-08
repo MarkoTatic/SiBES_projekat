@@ -11,6 +11,6 @@ namespace Common
     public interface IWCFCentralServer
     {
         [OperationContract]
-        string printInfo();
+        string TestConnection();
     }
 }
