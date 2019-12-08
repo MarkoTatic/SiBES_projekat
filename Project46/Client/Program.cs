@@ -12,6 +12,7 @@ namespace Client
     public class Program
     {
         private static int i = 1;
+        private static int cnt = 1;
         private static int Menu()
         {
             Console.WriteLine("Choose option by entering number: ");
@@ -23,7 +24,7 @@ namespace Client
             }
             catch
             {
-                Console.WriteLine("You didn't enter a valid option. Please try again.");
+                Console.WriteLine("You didn't enter a valid option. Please try againg.");
             }
             return val;
         }
@@ -52,11 +53,11 @@ namespace Client
                 {
                     throw new FaultException(e.Message);
                 }
-
+                DeserializeJson(users);
+                int otherClient = PrintConnectedClients();
             }
 
-            DeserializeJson(users);
-            int otherClient = PrintConnectedClients();
+           
 
             Console.ReadKey();
         }
@@ -64,11 +65,11 @@ namespace Client
         private static void DeserializeJson(string users)
         {
             List<User> listUsers = JsonConvert.DeserializeObject<List<User>>(users);
-            int i = 1;
+            //int i = 1;
             foreach (User item in listUsers)
             {
-                DBClients.connectedClients.Add(i, item);
-                i++;
+                DBClients.connectedClients.Add(cnt, item);
+                cnt++;
             }
         }
 
