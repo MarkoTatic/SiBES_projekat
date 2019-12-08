@@ -18,9 +18,9 @@ namespace Client
             factory = this.CreateChannel();
         }
 
-        public List<User> GetConnectedClients()
+        public string GetConnectedClients()
         {
-            List<User> users = new List<User>();
+            string users = string.Empty;
             try
             {
                 users = factory.GetConnectedClients();

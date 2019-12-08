@@ -12,9 +12,17 @@ namespace CentralServer
     public class WCFCentralServer : IWCFCentralServer
     {
         //private static List<User> ConnectedClients = new List<User>();
-        public List<User> GetConnectedClients()
+        public string GetConnectedClients()
         {
-            return DBClients.ConnectedClients;
+            string ret = string.Empty;
+            foreach (var user in DBClients.ConnectedClients)
+            {
+                ret += user.Name;
+                ret += "\n";
+                ret += user.SID;
+                ret += "\n";
+            }
+            return ret;
         }
 
         public string TestConnection()

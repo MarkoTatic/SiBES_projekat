@@ -14,6 +14,6 @@ namespace Common
         string TestConnection();
 
         [OperationContract]
-        List<User> GetConnectedClients();
+        string GetConnectedClients();
     }
 }

@@ -31,6 +31,7 @@ namespace Client
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:5000/WCFCentralServer";
             List<User> connectedClients = new List<User>();
+            string users = String.Empty;
             int m = Menu();
             WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
             try
@@ -44,7 +45,7 @@ namespace Client
             {
                 try
                 {
-                    connectedClients = proxy.GetConnectedClients();
+                    users = proxy.GetConnectedClients();
                 }
                 catch (FaultException e)
                 {
@@ -59,6 +60,8 @@ namespace Client
                 Console.WriteLine(client.Name);
                 Console.WriteLine("-------------");
             }
+            Console.WriteLine(users);
+
             Console.ReadKey();
         }
     }
