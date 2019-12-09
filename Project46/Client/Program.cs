@@ -3,8 +3,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Client
@@ -15,16 +17,19 @@ namespace Client
         private static int cnt = 1;
         private static int Menu()
         {
-            Console.WriteLine("Choose option by entering number: ");
-            Console.WriteLine("1 - Preview connected clients.");
             int val = 0;
-            try
+            while (val != 1)
             {
-                val = Int32.Parse(Console.ReadLine());
-            }
-            catch
-            {
-                Console.WriteLine("You didn't enter a valid option. Please try againg.");
+                Console.WriteLine("Choose option by entering number: ");
+                Console.WriteLine("1 - Preview connected clients.");
+                try
+                {
+                    val = Int32.Parse(Console.ReadLine());
+                }
+                catch
+                {
+                    Console.WriteLine("You didn't enter a valid option. Please try again.");
+                }
             }
             return val;
         }
@@ -34,14 +39,14 @@ namespace Client
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:5000/WCFCentralServer";
             string users = String.Empty;
-            
+            string clientId;
             WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
+            //IIdentity identity = Thread.CurrentPrincipal.Identity;
             try
             {
-                string clientId = proxy.TestConnection();
+                clientId = proxy.TestConnection();
                 Console.WriteLine(clientId);
-
-                var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "Peer1");
+                var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "Peer_" + clientId);      //otvaramo p2p konekciju za ostale klijente
                 Task.WaitAll(peer1.ChannelOpened);
             } catch (FaultException e)
             {
@@ -60,13 +65,13 @@ namespace Client
                 }
                 DeserializeJson(users);
                 int otherClient = PrintConnectedClients();
-                var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "Peer1");
+                var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "Peer_" + clientId);
                 Task.WaitAll(peer2.ChannelOpened);
                 while (true)
                 {
                     Console.WriteLine("Enter message to send:");
                     string messageToSend = Console.ReadLine();
-                    peer2.SendToPeer(messageToSend);
+                    peer2.SendToPeer(messageToSend, "Peer_" + clientId);
                 }
             }
 

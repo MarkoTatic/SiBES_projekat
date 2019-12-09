@@ -4,13 +4,6 @@ C:\Users\buduc\OneDrive\Documents\GitHub\SiBES_projekat\Project46\MonitoringServ
 C:\Users\buduc\OneDrive\Documents\GitHub\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.csprojAssemblyReference.cache
 C:\Users\buduc\OneDrive\Documents\GitHub\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.exe
 C:\Users\buduc\OneDrive\Documents\GitHub\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.pdb
-C:\Users\Natasas\Desktop\SiBES_projekat\Project46\MonitoringServer\bin\Debug\MonitoringServer.exe.config
-C:\Users\Natasas\Desktop\SiBES_projekat\Project46\MonitoringServer\bin\Debug\MonitoringServer.exe
-C:\Users\Natasas\Desktop\SiBES_projekat\Project46\MonitoringServer\bin\Debug\MonitoringServer.pdb
-C:\Users\Natasas\Desktop\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.csprojAssemblyReference.cache
-C:\Users\Natasas\Desktop\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.csproj.CoreCompileInputs.cache
-C:\Users\Natasas\Desktop\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.exe
-C:\Users\Natasas\Desktop\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.pdb
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\MonitoringServer\bin\Debug\MonitoringServer.exe.config
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\MonitoringServer\bin\Debug\MonitoringServer.exe
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\MonitoringServer\bin\Debug\MonitoringServer.pdb

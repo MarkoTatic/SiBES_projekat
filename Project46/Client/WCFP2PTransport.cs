@@ -8,7 +8,7 @@ using System.ServiceModel.Description;
 public interface IDataChannel
 {
     [OperationContract(IsOneWay = true)]
-    void SendData(string data);
+    void SendData(string data, string name);
 }
 
 public class WCFP2PTransport : IDataChannel
@@ -31,7 +31,11 @@ public class WCFP2PTransport : IDataChannel
                 binding,
                 new EndpointAddress("net.p2p://" + service));
 
-            m_factory = new DuplexChannelFactory<IDataChannel>(new InstanceContext(this), endpoint);
+
+
+            var sourceContext = new InstanceContext(this);
+
+            m_factory = new DuplexChannelFactory<IDataChannel>(sourceContext, endpoint);
 
             m_outChannel = m_factory.CreateChannel();
 
@@ -55,15 +59,16 @@ public class WCFP2PTransport : IDataChannel
         }
     }
 
-    public void SendToPeer(string data)
+    public void SendToPeer(string data, string name)
     {
-        m_outChannel.SendData(data);
+        m_outChannel.SendData(data, name);
     }
 
     // IDataChannel method(s), handle incoming traffic
-    public void SendData(string data)
+    public void SendData(string data, string name)
     {
-        Console.WriteLine("{0} Received data: {1}", m_name, data);
+        if(m_name != name)
+            Console.WriteLine("{0} Received data: {1}", m_name, data);
     }
 
     // cleanup code omitted for brevity
