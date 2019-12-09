@@ -9,3 +9,4 @@ C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\MonitoringServer\bin\De
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\MonitoringServer\bin\Debug\MonitoringServer.pdb
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.exe
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.pdb
+C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\MonitoringServer\obj\Debug\MonitoringServer.csprojAssemblyReference.cache

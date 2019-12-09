@@ -69,8 +69,12 @@ namespace Client
                 Task.WaitAll(peer2.ChannelOpened);
                 while (true)
                 {
-                    Console.WriteLine("Enter message to send:");
+                    Console.WriteLine("Enter message to send, type 'x' for disconection:");
                     string messageToSend = Console.ReadLine();
+                    if(messageToSend.Equals("x") || messageToSend.Equals("X"))
+                    {
+                        break;
+                    }
                     peer2.SendToPeer(messageToSend, "Peer_" + clientId);
                 }
             }
