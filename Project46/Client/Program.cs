@@ -13,14 +13,15 @@ namespace Client
 {
     public class Program
     {
-        private static int i = 1;
+        //private static int i = 1;
         private static int cnt = 1;
         private static int Menu()
         {
-            int val = 0;
-            while (val != 1)
+            int val = -1;
+            while (val != 1 && val != 0)
             {
                 Console.WriteLine("Choose option by entering number: ");
+                Console.WriteLine("0 - Close connection.");
                 Console.WriteLine("1 - Preview connected clients.");
                 try
                 {
@@ -45,47 +46,57 @@ namespace Client
             try
             {
                 clientId = proxy.TestConnection();
-                Console.WriteLine(clientId);
+                Console.WriteLine("Current: peer_"+clientId);
                 var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "Peer_" + clientId);      //otvaramo p2p konekciju za ostale klijente
                 Task.WaitAll(peer1.ChannelOpened);
             } catch (FaultException e)
             {
                 throw new FaultException(e.Message);
             }
-            int m = Menu();
-            if (m == 1)
+            while (true)
             {
-                try
+                int m = Menu();
+                if (m == 1)
                 {
-                    users = proxy.GetConnectedClients();
-                }
-                catch (FaultException e)
-                {
-                    throw new FaultException(e.Message);
-                }
-                DeserializeJson(users);
-                int otherClient = PrintConnectedClients();
-                var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "Peer_" + clientId);
-                Task.WaitAll(peer2.ChannelOpened);
-                while (true)
-                {
-                    Console.WriteLine("Enter message to send, type 'x' for disconection:");
-                    string messageToSend = Console.ReadLine();
-                    if(messageToSend.Equals("x") || messageToSend.Equals("X"))
+                    try
                     {
-                        break;
+                        users = proxy.GetConnectedClients();
                     }
-                    peer2.SendToPeer(messageToSend, "Peer_" + clientId);
+                    catch (FaultException e)
+                    {
+                        throw new FaultException(e.Message);
+                    }
+                    DeserializeJson(users);
+                    PrintConnectedClients();
+                    int otherClient = ChooseClient();
+                    if (otherClient == 0)
+                        continue;
+                    var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "Peer_" + clientId);
+                    Task.WaitAll(peer2.ChannelOpened);
+                    while (true)
+                    {
+                        Console.WriteLine("Enter message to send, type 'x' for disconection:");
+                        string messageToSend = Console.ReadLine();
+                        if (messageToSend.Equals("x") || messageToSend.Equals("X"))
+                        {
+                            break;
+                        }
+                        peer2.SendToPeer(messageToSend, "Peer_" + clientId);
+                    }
                 }
+                if (m == 0)
+                    break;
             }
 
-           
 
+
+            Console.WriteLine("Press any key to close..");
             Console.ReadKey();
         }
 
         private static void DeserializeJson(string users)
         {
+            DBClients.connectedClients.Clear();
             List<User> listUsers = JsonConvert.DeserializeObject<List<User>>(users);
             //int i = 1;
             foreach (User item in listUsers)
@@ -95,16 +106,44 @@ namespace Client
             }
         }
 
-        private static int PrintConnectedClients()
+        private static void PrintConnectedClients()
         {
+            int i = 1;
             Console.WriteLine("Connected clients at the moment are: ");
+            Console.WriteLine("------------------------------------");
             foreach (User item in DBClients.connectedClients.Values)
             {
                 Console.WriteLine(i +". "+ item.Name + ", SID: " + item.SID);
                 i++;
             }
+            Console.WriteLine("------------------------------------");
+        }
+
+        private static int ChooseClient()
+        {
             Console.WriteLine("Please choose a client you want to connect with by picking ordinal number.");
-            int retVal = Int32.Parse(Console.ReadLine());
+            Console.WriteLine("0 - Quit option for sending messages.");
+            int retVal;
+            while (true)
+            {
+                try
+                {
+                    retVal = Int32.Parse(Console.ReadLine());
+                    if (retVal > DBClients.connectedClients.Count)
+                    {
+                        Console.WriteLine("Please enter a valid number from the list.");
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Please enter a valid number from the list.");
+                }
+            }
             return retVal;
         }
     }
