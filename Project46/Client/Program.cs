@@ -42,6 +42,7 @@ namespace Client
             string users = String.Empty;
             string clientId;
             WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
+            //Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             //IIdentity identity = Thread.CurrentPrincipal.Identity;
             try
             {
