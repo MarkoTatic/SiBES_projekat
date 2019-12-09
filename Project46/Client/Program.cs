@@ -14,7 +14,7 @@ namespace Client
     public class Program
     {
         //private static int i = 1;
-        private static int cnt = 1;
+        //private static int cnt = 1;
         private static int Menu()
         {
             int val = -1;
@@ -98,7 +98,7 @@ namespace Client
         {
             DBClients.connectedClients.Clear();
             List<User> listUsers = JsonConvert.DeserializeObject<List<User>>(users);
-            //int i = 1;
+            int cnt = 1;
             foreach (User item in listUsers)
             {
                 DBClients.connectedClients.Add(cnt, item);
