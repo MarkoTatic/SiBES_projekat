@@ -12,7 +12,7 @@ namespace CentralServer
 {
     public class WCFCentralServer : IWCFCentralServer
     {
-        //private static List<User> ConnectedClients = new List<User>();
+        private static int ClientCounter = 0;
         public string GetConnectedClients()
         {
             /*string ret = string.Empty;
@@ -37,17 +37,11 @@ namespace CentralServer
             WindowsIdentity winIdentity = identity as WindowsIdentity;
             Console.WriteLine("Security Identifier (SID) {0}", winIdentity.User); // ovo ne moze preko IIentity id=nterfejsa jer je Windows-specific
 
-            //foreach (IdentityReference group in winIdentity.Groups)
-            //{
-            //    SecurityIdentifier sid = (SecurityIdentifier)group.Translate(typeof(SecurityIdentifier));
-            //    var name = sid.Translate(typeof(NTAccount));
-            //    Console.WriteLine("{0}", name.ToString());
-            //}
-
+            WCFCentralServer.ClientCounter += 1;
             User user = new User(Formatter.ParseName(identity.Name), winIdentity.User.ToString());
             DBClients.ConnectedClients.Add(user);
 
-            return "Succesfully connected.";
+            return WCFCentralServer.ClientCounter.ToString();
         }
     }
 }

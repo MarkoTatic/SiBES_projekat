@@ -38,7 +38,11 @@ namespace Client
             WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
             try
             {
-                Console.WriteLine(proxy.TestConnection());
+                string clientId = proxy.TestConnection();
+                Console.WriteLine(clientId);
+
+                var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "Peer1");
+                Task.WaitAll(peer1.ChannelOpened);
             } catch (FaultException e)
             {
                 throw new FaultException(e.Message);
@@ -56,6 +60,14 @@ namespace Client
                 }
                 DeserializeJson(users);
                 int otherClient = PrintConnectedClients();
+                var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "Peer1");
+                Task.WaitAll(peer2.ChannelOpened);
+                while (true)
+                {
+                    Console.WriteLine("Enter message to send:");
+                    string messageToSend = Console.ReadLine();
+                    peer2.SendToPeer(messageToSend);
+                }
             }
 
            
