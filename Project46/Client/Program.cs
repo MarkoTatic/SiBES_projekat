@@ -119,11 +119,18 @@ namespace Client
 
             Console.WriteLine("Press any key to close..");
             Console.ReadKey();
+            try
+            {
+                proxy.Disconnect(winIdentity.User.ToString());
+            } catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
             host.Close();
             proxy.Close();
             return 0;
         }
-
+        #region opening_channels
         private static WCFClient BindToCentralServer()
         {
             string srvCertCN = "wcfServer1";
@@ -182,13 +189,13 @@ namespace Client
 
             return proxyPeerClient;
         }
-
+        #endregion
         private static void DeserializeJson(string users)
         {
             DBClients.connectedClients.Clear();
-            List<User> listUsers = JsonConvert.DeserializeObject<List<User>>(users);
+            Dictionary<string,User> dictUsers = JsonConvert.DeserializeObject<Dictionary<string, User>>(users);
             int cnt = 1;
-            foreach (User item in listUsers)
+            foreach (User item in dictUsers.Values)
             {
                 DBClients.connectedClients.Add(cnt, item);
                 cnt++;
