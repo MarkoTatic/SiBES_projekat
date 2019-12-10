@@ -9,6 +9,6 @@ namespace CentralServer
 {
     public class DBClients
     {
-        public static List<User> ConnectedClients = new List<User>();
+        public static Dictionary<string, User> ConnectedClients = new Dictionary<string, User>();
     }
 }

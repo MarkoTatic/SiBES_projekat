@@ -13,6 +13,12 @@ namespace CentralServer
     public class WCFCentralServer : IWCFCentralServer
     {
         private static int ClientCounter = 0;
+
+        public void Disconnect(string sid)
+        {
+            DBClients.ConnectedClients.Remove(sid);
+        }
+
         public string GetConnectedClients()
         {
             string jsonString = JsonConvert.SerializeObject(DBClients.ConnectedClients);
@@ -21,18 +27,9 @@ namespace CentralServer
 
         public string TestConnection(string name, string sid)
         {
-            /*Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-            IIdentity identity = Thread.CurrentPrincipal.Identity;
-            Console.WriteLine("Name {0}", identity.Name);
-            Console.WriteLine("IsAuthenticated {0}", identity.IsAuthenticated);
-            Console.WriteLine("AuthenticationType {0}", identity.AuthenticationType);
-            
-            WindowsIdentity winIdentity = identity as WindowsIdentity;
-            Console.WriteLine("Security Identifier (SID) {0}", winIdentity.User); // ovo ne moze preko IIentity id=nterfejsa jer je Windows-specific
-        */
             WCFCentralServer.ClientCounter += 1;
             User user = new User(Formatter.ParseName(name), sid);
-            DBClients.ConnectedClients.Add(user);
+            DBClients.ConnectedClients.Add(user.SID, user);
 
             return WCFCentralServer.ClientCounter.ToString();
         }
