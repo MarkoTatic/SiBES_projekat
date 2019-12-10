@@ -15,8 +15,6 @@ namespace Client
 {
     public class Program
     {
-        //private static int i = 1;
-        //private static int cnt = 1;
         private static int Menu()
         {
             int val = -1;
@@ -39,59 +37,37 @@ namespace Client
 
         static int Main(string[] args)
         {
-            /// Define the expected service certificate. It is required to establish cmmunication using certificates.
-            string srvCertCN = "wcfServer1";
-            //string srvCertCN = "WCFService";
-
-            NetTcpBinding binding = new NetTcpBinding();
-            binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
-            string address = "net.tcp://localhost:5000/WCFCentralServer";
-
-            X509Certificate2 srvCert = CertManager.GetCertificateFromStorage(StoreName.TrustedPeople, StoreLocation.LocalMachine, srvCertCN);
-            EndpointAddress addressWithCert = new EndpointAddress(new Uri(address),
-                                      new X509CertificateEndpointIdentity(srvCert));
-
-
             string users = String.Empty;
             string clientId;
-            WCFClient proxy = new WCFClient(binding, addressWithCert);
+
+            WCFClient proxy = BindToCentralServer();
+
             Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
             WindowsIdentity winIdentity = identity as WindowsIdentity;
-            int p2pPort = 6000;
+
+            int peerServicePort = 6000;
             try
             {
                 clientId = proxy.TestConnection(identity.Name, winIdentity.User.ToString());
-                p2pPort += Int32.Parse(clientId);
-                Console.WriteLine("Current: peer_" + clientId);
-
-
-                NetTcpBinding bindingP2P = new NetTcpBinding();
-
-                string addressP2P = "net.tcp://localhost:" + p2pPort.ToString() + "/P2PServer";
-                ServiceHost host = new ServiceHost(typeof(P2PServer));
-                host.AddServiceEndpoint(typeof(IP2PServer), bindingP2P, addressP2P);
-                host.Open();
-
-
-                //var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "peer_" + clientId);      //otvaramo p2p konekciju za ostale klijente
-                //Task.WaitAll(peer1.ChannelOpened);
-
-
             }
             catch (FaultException e)
             {
-
                 throw new FaultException(e.Message);
             }
-
-            if (clientId == "-1")
+            if (clientId == "-1")   
             {
                 Console.WriteLine("Press any key to close connection. ");
                 Console.ReadKey();
                 proxy.Abort();
                 return 0;
             }
+
+            peerServicePort += Int32.Parse(clientId);
+            Console.WriteLine("Current: peer_" + clientId);
+
+
+            ServiceHost host = OpenPeerService(peerServicePort);
 
             while (true)
             {
@@ -117,17 +93,7 @@ namespace Client
                         continue;
                     }
 
-
-
-                    //var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "peer_" + clientId);
-                    //Task.WaitAll(peer2.ChannelOpened);
-
-                    int getPortic = 6000 + otherClient;
-
-
-                    NetTcpBinding binding3 = new NetTcpBinding();
-                    string address3 = "net.tcp://localhost:" + getPortic.ToString() + "/P2PServer";
-                    P2PClient proxy3 = new P2PClient(binding3, new EndpointAddress(address3));
+                    Peer proxyPeerClient = OpenPeerClient(otherClient);
 
                     while (true)
                     {
@@ -137,10 +103,15 @@ namespace Client
                         {
                             break;
                         }
-                        //peer2.SendToPeer(messageToSend, "peer_" + clientId);
-                        proxy3.SendMessage(messageToSend);
+                        try
+                        {
+                            proxyPeerClient.SendMessage(messageToSend);
+                        }catch(Exception e)
+                        {
+                            throw new Exception(e.Message);
+                        }
                     }
-                    // peer2.CloseChannel();
+                    proxyPeerClient.Abort();
                 }
                 if (m == 0)
                     break;
@@ -148,9 +119,55 @@ namespace Client
 
             Console.WriteLine("Press any key to close..");
             Console.ReadKey();
-
+            host.Close();
             proxy.Close();
             return 0;
+        }
+
+        private static WCFClient BindToCentralServer()
+        {
+            //string srvCertCN = "wcfServer1";
+            string srvCertCN = "WCFService";
+            NetTcpBinding binding = new NetTcpBinding();
+            binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
+            string address = "net.tcp://localhost:5000/WCFCentralServer";
+
+            X509Certificate2 srvCert = CertManager.GetCertificateFromStorage(StoreName.TrustedPeople, StoreLocation.LocalMachine, srvCertCN);
+            EndpointAddress addressWithCert = new EndpointAddress(new Uri(address),
+                                      new X509CertificateEndpointIdentity(srvCert));
+
+            WCFClient proxy = new WCFClient(binding, addressWithCert);
+            return proxy;
+        }
+
+        private static ServiceHost OpenPeerService(int peerServicePort)
+        {
+            NetTcpBinding bindingPeerService = new NetTcpBinding();
+
+            string addressPeerService = "net.tcp://localhost:" + peerServicePort.ToString() + "/P2PTransport";
+            ServiceHost host = new ServiceHost(typeof(P2PTransport));
+            host.AddServiceEndpoint(typeof(IP2PTransport), bindingPeerService, addressPeerService);
+            try
+            {
+                host.Open();
+            } catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
+            return host;
+        }
+
+        private static Peer OpenPeerClient(int otherClient)
+        {
+            int peerClientPort = 6000 + otherClient;
+
+
+            NetTcpBinding bindingPeerClient = new NetTcpBinding();
+            string addressPeerClient = "net.tcp://localhost:" + peerClientPort.ToString() + "/P2PTransport";
+            Peer proxyPeerClient = new Peer(bindingPeerClient, new EndpointAddress(addressPeerClient));
+
+            return proxyPeerClient;
         }
 
         private static void DeserializeJson(string users)

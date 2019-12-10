@@ -49,9 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBClients.cs" />
-    <Compile Include="IP2PServer.cs" />
-    <Compile Include="P2PClient.cs" />
-    <Compile Include="P2PServer.cs" />
+    <Compile Include="IP2PTransport.cs" />
+    <Compile Include="Peer.cs" />
+    <Compile Include="P2PTransport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WCFClient.cs" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-    public class P2PServer : IP2PServer
+    public class P2PTransport : IP2PTransport
     {
         public void SendMessage(string myMessage)
         {

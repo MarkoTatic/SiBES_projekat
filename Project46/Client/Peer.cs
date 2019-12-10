@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-    public class P2PClient : ChannelFactory<IP2PServer>, IP2PServer, IDisposable
+    public class Peer : ChannelFactory<IP2PTransport>, IP2PTransport, IDisposable
     {
-        IP2PServer factory;
-        public P2PClient(NetTcpBinding binding,
+        IP2PTransport factory;
+        public Peer(NetTcpBinding binding,
                         EndpointAddress address) : base(binding, address)
         {
             factory = this.CreateChannel();

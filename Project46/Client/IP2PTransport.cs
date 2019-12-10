@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Client
 {
     [ServiceContract]
-    public interface IP2PServer
+    public interface IP2PTransport
     {
         [OperationContract]
         void SendMessage(string myMessage);
