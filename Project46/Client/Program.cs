@@ -92,8 +92,8 @@ namespace Client
                         Console.WriteLine("This is your account. Please try again.");
                         continue;
                     }
-
-                    Peer proxyPeerClient = OpenPeerClient(otherClient);
+                    User user = DBClients.connectedClients[otherClient];
+                    Peer proxyPeerClient = OpenPeerClient(user.Counter);
 
                     while (true)
                     {
@@ -133,8 +133,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            string srvCertCN = "wcfServer1";
-            //string srvCertCN = "WCFService";
+            //string srvCertCN = "wcfServer1";
+            string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";
@@ -190,6 +190,7 @@ namespace Client
             return proxyPeerClient;
         }
         #endregion
+
         private static void DeserializeJson(string users)
         {
             DBClients.connectedClients.Clear();

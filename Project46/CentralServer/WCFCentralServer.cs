@@ -27,11 +27,12 @@ namespace CentralServer
 
         public string TestConnection(string name, string sid)
         {
-            WCFCentralServer.ClientCounter += 1;
+            ClientCounter += 1;
             User user = new User(Formatter.ParseName(name), sid);
+            user.Counter = ClientCounter;
             DBClients.ConnectedClients.Add(user.SID, user);
 
-            return WCFCentralServer.ClientCounter.ToString();
+            return ClientCounter.ToString();
         }
     }
 }

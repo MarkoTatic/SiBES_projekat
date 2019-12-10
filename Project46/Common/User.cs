@@ -15,7 +15,8 @@ namespace Common
         public string SID { get; set; }
         [DataMember]
         public string Name { get; set; }
-
+        [DataMember]
+        public int Counter { get; set; }
         public User()
         {
             SID = null;
