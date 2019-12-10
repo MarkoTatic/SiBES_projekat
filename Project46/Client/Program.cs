@@ -1,8 +1,10 @@
 ﻿using Common;
+using Manager;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.ServiceModel;
 using System.Text;
@@ -37,11 +39,31 @@ namespace Client
 
         static void Main(string[] args)
         {
+            /// Define the expected service certificate. It is required to establish cmmunication using certificates.
+            string srvCertCN = "wcfServer1";
+
+            /// Define the expected certificate for signing ("<username>_sign" is the expected subject name).
+            /// .NET WindowsIdentity class provides information about Windows user running the given process
+            string signCertCN = String.Empty;
+
+            /// Define subjectName for certificate used for signing which is not as expected by the service
+            string wrongCertCN = String.Empty;
+
+
+
+
             NetTcpBinding binding = new NetTcpBinding();
+            binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";
+
+            X509Certificate2 srvCert = CertManager.GetCertificateFromStorage(StoreName.TrustedPeople, StoreLocation.LocalMachine, srvCertCN);
+            EndpointAddress addressWithCert = new EndpointAddress(new Uri(address),
+                                      new X509CertificateEndpointIdentity(srvCert));
+
+
             string users = String.Empty;
             string clientId;
-            WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
+            WCFClient proxy = new WCFClient(binding, addressWithCert);
             //Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             //IIdentity identity = Thread.CurrentPrincipal.Identity;
             try
