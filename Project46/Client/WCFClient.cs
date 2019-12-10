@@ -34,6 +34,17 @@ namespace Client
             factory = this.CreateChannel();
         }
 
+        public void Disconnect(string sid)
+        {
+            try
+            {
+                factory.Disconnect(sid);
+            } catch(FaultException e)
+            {
+                throw new FaultException(e.Message);
+            }
+        }
+
         public string GetConnectedClients()
         {
             string users = string.Empty;

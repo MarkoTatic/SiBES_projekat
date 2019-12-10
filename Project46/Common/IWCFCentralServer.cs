@@ -16,5 +16,8 @@ namespace Common
 
         [OperationContract]
         string GetConnectedClients();
+
+        [OperationContract]
+        void Disconnect(string sid);
     }
 }
