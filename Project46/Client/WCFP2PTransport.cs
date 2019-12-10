@@ -71,6 +71,11 @@ public class WCFP2PTransport : IDataChannel
             Console.WriteLine("{0} Received data: {1}", m_name, data);
     }
 
+    public void CloseChannel()//da se ugasi konekcija nakon sto klijent pritisne 'x', jer inace bi on bio na gostojucem kanalu sve dok se opet ne redirektuje na neki drugi
+    {
+        m_factory.Close();
+    }
+
     // cleanup code omitted for brevity
 }
 

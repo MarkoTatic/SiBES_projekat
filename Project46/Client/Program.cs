@@ -48,7 +48,7 @@ namespace Client
             {
                 clientId = proxy.TestConnection();
                 Console.WriteLine("Current: peer_"+clientId);
-                var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "Peer_" + clientId);      //otvaramo p2p konekciju za ostale klijente
+                var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "peer_" + clientId);      //otvaramo p2p konekciju za ostale klijente
                 Task.WaitAll(peer1.ChannelOpened);
             } catch (FaultException e)
             {
@@ -72,7 +72,7 @@ namespace Client
                     int otherClient = ChooseClient();
                     if (otherClient == 0)
                         continue;
-                    var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "Peer_" + clientId);
+                    var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "peer_" + clientId);
                     Task.WaitAll(peer2.ChannelOpened);
                     while (true)
                     {
@@ -82,8 +82,9 @@ namespace Client
                         {
                             break;
                         }
-                        peer2.SendToPeer(messageToSend, "Peer_" + clientId);
+                        peer2.SendToPeer(messageToSend, "peer_" + clientId);
                     }
+                    peer2.CloseChannel();
                 }
                 if (m == 0)
                     break;
