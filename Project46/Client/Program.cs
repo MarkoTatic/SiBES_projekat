@@ -37,20 +37,11 @@ namespace Client
             return val;
         }
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             /// Define the expected service certificate. It is required to establish cmmunication using certificates.
-            string srvCertCN = "wcfServer1";
-
-            /// Define the expected certificate for signing ("<username>_sign" is the expected subject name).
-            /// .NET WindowsIdentity class provides information about Windows user running the given process
-            string signCertCN = String.Empty;
-
-            /// Define subjectName for certificate used for signing which is not as expected by the service
-            string wrongCertCN = String.Empty;
-
-
-
+            //string srvCertCN = "wcfServer1";
+            string srvCertCN = "WCFService";
 
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
@@ -66,6 +57,7 @@ namespace Client
             WCFClient proxy = new WCFClient(binding, addressWithCert);
             //Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             //IIdentity identity = Thread.CurrentPrincipal.Identity;
+
             try
             {
                 clientId = proxy.TestConnection();
@@ -74,8 +66,18 @@ namespace Client
                 Task.WaitAll(peer1.ChannelOpened);
             } catch (FaultException e)
             {
+                
                 throw new FaultException(e.Message);
             }
+
+            if(clientId == "-1")
+            {
+                Console.WriteLine("Press any key to close connection. ");
+                Console.ReadKey();
+                proxy.Abort();
+                return 0;
+            }
+
             while (true)
             {
                 int m = Menu();
@@ -112,10 +114,11 @@ namespace Client
                     break;
             }
 
-
-
             Console.WriteLine("Press any key to close..");
             Console.ReadKey();
+
+            proxy.Close();
+            return 0;
         }
 
         private static void DeserializeJson(string users)

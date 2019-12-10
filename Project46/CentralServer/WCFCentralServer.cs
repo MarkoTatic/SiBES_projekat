@@ -15,20 +15,13 @@ namespace CentralServer
         private static int ClientCounter = 0;
         public string GetConnectedClients()
         {
-            /*string ret = string.Empty;
-            foreach (var user in DBClients.ConnectedClients)
-            {
-                ret += user.Name;
-                ret += "|";
-                ret += user.SID;
-                ret += "\n";
-            }*/
             string jsonString = JsonConvert.SerializeObject(DBClients.ConnectedClients);
             return jsonString;
         }
 
         public string TestConnection()
         {
+            Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
             Console.WriteLine("Name {0}", identity.Name);
             Console.WriteLine("IsAuthenticated {0}", identity.IsAuthenticated);

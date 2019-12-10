@@ -8,6 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Client
@@ -19,7 +20,9 @@ namespace Client
         public WCFClient(NetTcpBinding binding,
                          EndpointAddress address) : base(binding, address)
         {
-            string cltCertCN = Formatter.ParseName(WindowsIdentity.GetCurrent().Name);
+            Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+            IIdentity identity = Thread.CurrentPrincipal.Identity;
+            string cltCertCN = Formatter.ParseName(identity.Name);
 						
 			this.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.Custom;
 			this.Credentials.ServiceCertificate.Authentication.CustomCertificateValidator = new ClientCertValidator();
@@ -53,7 +56,8 @@ namespace Client
                retVal = factory.TestConnection(); 
             } catch(Exception e)
             {
-                Console.WriteLine("Exception details: " + e.Message);
+                Console.WriteLine("Test connection failed. Exception details: " + e.Message);
+                retVal = "-1";
             }
             return retVal;
         }
