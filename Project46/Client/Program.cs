@@ -55,12 +55,12 @@ namespace Client
             string users = String.Empty;
             string clientId;
             WCFClient proxy = new WCFClient(binding, addressWithCert);
-            //Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-            //IIdentity identity = Thread.CurrentPrincipal.Identity;
-
+            Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+            IIdentity identity = Thread.CurrentPrincipal.Identity;
+            WindowsIdentity winIdentity = identity as WindowsIdentity;
             try
             {
-                clientId = proxy.TestConnection();
+                clientId = proxy.TestConnection(identity.Name, winIdentity.User.ToString());
                 Console.WriteLine("Current: peer_"+clientId);
                 var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "peer_" + clientId);      //otvaramo p2p konekciju za ostale klijente
                 Task.WaitAll(peer1.ChannelOpened);
@@ -96,6 +96,11 @@ namespace Client
                     int otherClient = ChooseClient();
                     if (otherClient == 0)
                         continue;
+                    if(otherClient == Int32.Parse(clientId))
+                    {
+                        Console.WriteLine("This is your account. Please try again.");
+                        continue;
+                    }
                     var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "peer_" + clientId);
                     Task.WaitAll(peer2.ChannelOpened);
                     while (true)

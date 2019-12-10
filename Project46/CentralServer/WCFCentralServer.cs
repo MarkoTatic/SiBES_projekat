@@ -19,19 +19,19 @@ namespace CentralServer
             return jsonString;
         }
 
-        public string TestConnection()
+        public string TestConnection(string name, string sid)
         {
-            Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+            /*Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
             Console.WriteLine("Name {0}", identity.Name);
             Console.WriteLine("IsAuthenticated {0}", identity.IsAuthenticated);
             Console.WriteLine("AuthenticationType {0}", identity.AuthenticationType);
-
+            
             WindowsIdentity winIdentity = identity as WindowsIdentity;
             Console.WriteLine("Security Identifier (SID) {0}", winIdentity.User); // ovo ne moze preko IIentity id=nterfejsa jer je Windows-specific
-
+        */
             WCFCentralServer.ClientCounter += 1;
-            User user = new User(Formatter.ParseName(identity.Name), winIdentity.User.ToString());
+            User user = new User(Formatter.ParseName(name), sid);
             DBClients.ConnectedClients.Add(user);
 
             return WCFCentralServer.ClientCounter.ToString();

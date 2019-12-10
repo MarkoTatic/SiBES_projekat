@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Client
 {
+
     public class WCFClient : ChannelFactory<IWCFCentralServer>, IWCFCentralServer, IDisposable
     {
         IWCFCentralServer factory;
@@ -48,12 +49,12 @@ namespace Client
             return users;
         }
 
-        public string TestConnection()
+        public string TestConnection(string name, string sid)
         {
             string retVal = string.Empty;
             try
             {
-               retVal = factory.TestConnection(); 
+               retVal = factory.TestConnection(name, sid); 
             } catch(Exception e)
             {
                 Console.WriteLine("Test connection failed. Exception details: " + e.Message);

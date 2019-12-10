@@ -13,3 +13,8 @@ C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\Common\bin\Debug\Common
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\Common\bin\Debug\Common.pdb
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.dll
 C:\Users\buduc\OneDrive\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.pdb
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\bin\Debug\Common.dll
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\bin\Debug\Common.pdb
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.dll
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Common\obj\Debug\Common.pdb
