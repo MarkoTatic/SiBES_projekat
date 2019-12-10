@@ -40,8 +40,8 @@ namespace Client
         static int Main(string[] args)
         {
             /// Define the expected service certificate. It is required to establish cmmunication using certificates.
-            //string srvCertCN = "wcfServer1";
-            string srvCertCN = "WCFService";
+            string srvCertCN = "wcfServer1";
+            //string srvCertCN = "WCFService";
 
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
@@ -58,19 +58,34 @@ namespace Client
             Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
             WindowsIdentity winIdentity = identity as WindowsIdentity;
+            int p2pPort = 6000;
             try
             {
                 clientId = proxy.TestConnection(identity.Name, winIdentity.User.ToString());
-                Console.WriteLine("Current: peer_"+clientId);
-                var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "peer_" + clientId);      //otvaramo p2p konekciju za ostale klijente
-                Task.WaitAll(peer1.ChannelOpened);
-            } catch (FaultException e)
+                p2pPort += Int32.Parse(clientId);
+                Console.WriteLine("Current: peer_" + clientId);
+
+
+                NetTcpBinding bindingP2P = new NetTcpBinding();
+
+                string addressP2P = "net.tcp://localhost:" + p2pPort.ToString() + "/P2PServer";
+                ServiceHost host = new ServiceHost(typeof(P2PServer));
+                host.AddServiceEndpoint(typeof(IP2PServer), bindingP2P, addressP2P);
+                host.Open();
+
+
+                //var peer1 = new WCFP2PTransport("WCF_P2P_" + clientId, "peer_" + clientId);      //otvaramo p2p konekciju za ostale klijente
+                //Task.WaitAll(peer1.ChannelOpened);
+
+
+            }
+            catch (FaultException e)
             {
-                
+
                 throw new FaultException(e.Message);
             }
 
-            if(clientId == "-1")
+            if (clientId == "-1")
             {
                 Console.WriteLine("Press any key to close connection. ");
                 Console.ReadKey();
@@ -96,13 +111,24 @@ namespace Client
                     int otherClient = ChooseClient();
                     if (otherClient == 0)
                         continue;
-                    if(otherClient == Int32.Parse(clientId))
+                    if (otherClient == Int32.Parse(clientId))
                     {
                         Console.WriteLine("This is your account. Please try again.");
                         continue;
                     }
-                    var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "peer_" + clientId);
-                    Task.WaitAll(peer2.ChannelOpened);
+
+
+
+                    //var peer2 = new WCFP2PTransport("WCF_P2P_" + otherClient, "peer_" + clientId);
+                    //Task.WaitAll(peer2.ChannelOpened);
+
+                    int getPortic = 6000 + otherClient;
+
+
+                    NetTcpBinding binding3 = new NetTcpBinding();
+                    string address3 = "net.tcp://localhost:" + getPortic.ToString() + "/P2PServer";
+                    P2PClient proxy3 = new P2PClient(binding3, new EndpointAddress(address3));
+
                     while (true)
                     {
                         Console.WriteLine("Enter message to send, type 'x' for disconection:");
@@ -111,9 +137,10 @@ namespace Client
                         {
                             break;
                         }
-                        peer2.SendToPeer(messageToSend, "peer_" + clientId);
+                        //peer2.SendToPeer(messageToSend, "peer_" + clientId);
+                        proxy3.SendMessage(messageToSend);
                     }
-                    peer2.CloseChannel();
+                    // peer2.CloseChannel();
                 }
                 if (m == 0)
                     break;
@@ -145,7 +172,7 @@ namespace Client
             Console.WriteLine("------------------------------------");
             foreach (User item in DBClients.connectedClients.Values)
             {
-                Console.WriteLine(i +". "+ item.Name + ", SID: " + item.SID);
+                Console.WriteLine(i + ". " + item.Name + ", SID: " + item.SID);
                 i++;
             }
             Console.WriteLine("------------------------------------");
