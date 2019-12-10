@@ -126,8 +126,8 @@ namespace Client
 
         private static WCFClient BindToCentralServer()
         {
-            //string srvCertCN = "wcfServer1";
-            string srvCertCN = "WCFService";
+            string srvCertCN = "wcfServer1";
+            //string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";
@@ -143,9 +143,14 @@ namespace Client
         private static ServiceHost OpenPeerService(int peerServicePort)
         {
             NetTcpBinding bindingPeerService = new NetTcpBinding();
-
             string addressPeerService = "net.tcp://localhost:" + peerServicePort.ToString() + "/P2PTransport";
             ServiceHost host = new ServiceHost(typeof(P2PTransport));
+
+            bindingPeerService.Security.Mode = SecurityMode.Transport;
+            bindingPeerService.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
+            bindingPeerService.Security.Transport.ProtectionLevel = System.Net.Security.ProtectionLevel.EncryptAndSign;
+
+
             host.AddServiceEndpoint(typeof(IP2PTransport), bindingPeerService, addressPeerService);
             try
             {
@@ -161,11 +166,19 @@ namespace Client
         private static Peer OpenPeerClient(int otherClient)
         {
             int peerClientPort = 6000 + otherClient;
-
-
             NetTcpBinding bindingPeerClient = new NetTcpBinding();
             string addressPeerClient = "net.tcp://localhost:" + peerClientPort.ToString() + "/P2PTransport";
-            Peer proxyPeerClient = new Peer(bindingPeerClient, new EndpointAddress(addressPeerClient));
+
+            bindingPeerClient.Security.Mode = SecurityMode.Transport;
+            bindingPeerClient.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
+            bindingPeerClient.Security.Transport.ProtectionLevel = System.Net.Security.ProtectionLevel.EncryptAndSign;
+
+            Console.WriteLine("Korisnik {0} je pokrenuo klijenta", WindowsIdentity.GetCurrent().Name);
+            Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+            IIdentity identity = Thread.CurrentPrincipal.Identity;
+            EndpointAddress endpointAdress = new EndpointAddress(new Uri(addressPeerClient), EndpointIdentity.CreateUpnIdentity(identity.Name));
+
+            Peer proxyPeerClient = new Peer(bindingPeerClient, endpointAdress);
 
             return proxyPeerClient;
         }
