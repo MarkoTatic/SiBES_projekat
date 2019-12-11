@@ -45,7 +45,7 @@ namespace Client
             Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
             WindowsIdentity winIdentity = identity as WindowsIdentity;
-
+            string senderName = Formatter.ParseName(identity.Name);
             int peerServicePort = 6000;
             try
             {
@@ -94,7 +94,7 @@ namespace Client
                     }
                     User user = DBClients.connectedClients[otherClient];
                     Peer proxyPeerClient = OpenPeerClient(user.Counter);
-
+                    MonitoringChannel proxyMonitoring = OpenMonitoringChannel();    //open channel for logging all messages
                     while (true)
                     {
                         Console.WriteLine("Enter message to send, type 'x' for disconection:");
@@ -107,6 +107,14 @@ namespace Client
                         {
                             proxyPeerClient.SendMessage(messageToSend);
                         }catch(Exception e)
+                        {
+                            throw new Exception(e.Message);
+                        }
+                        try
+                        {
+                            proxyMonitoring.LogMessage(messageToSend, senderName, user.Name);
+                        }
+                        catch (Exception e)
                         {
                             throw new Exception(e.Message);
                         }
@@ -188,6 +196,16 @@ namespace Client
             Peer proxyPeerClient = new Peer(bindingPeerClient, endpointAdress);
 
             return proxyPeerClient;
+        }
+
+        private static MonitoringChannel OpenMonitoringChannel()
+        {
+            NetTcpBinding binding = new NetTcpBinding();
+            string address = "net.tcp://localhost:7000/WCFMonitoringServer";
+
+            MonitoringChannel proxy = new MonitoringChannel(binding, new EndpointAddress(address));
+
+            return proxy;
         }
         #endregion
 

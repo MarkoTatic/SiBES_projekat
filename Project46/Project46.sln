@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitoringServer", "Monitor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0C05FC6A-D69C-4B9C-9898-1B66F10D7027}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitoringCommon", "MonitoringCommon\MonitoringCommon.csproj", "{7DDABFD6-05E3-4309-B6F9-6F0D1C27750A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0C05FC6A-D69C-4B9C-9898-1B66F10D7027}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C05FC6A-D69C-4B9C-9898-1B66F10D7027}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C05FC6A-D69C-4B9C-9898-1B66F10D7027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DDABFD6-05E3-4309-B6F9-6F0D1C27750A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DDABFD6-05E3-4309-B6F9-6F0D1C27750A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DDABFD6-05E3-4309-B6F9-6F0D1C27750A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DDABFD6-05E3-4309-B6F9-6F0D1C27750A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
