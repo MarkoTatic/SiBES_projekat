@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AES_DECRYPTION.cs" />
+    <Compile Include="AES_ENCRYPTION.cs" />
     <Compile Include="IMonitoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -19,6 +19,11 @@ namespace CentralServer
             DBClients.ConnectedClients.Remove(sid);
         }
 
+        public string GenerateKey()
+        {
+            return SecretKey.GenerateKey();
+        }
+
         public string GetConnectedClients()
         {
             string jsonString = JsonConvert.SerializeObject(DBClients.ConnectedClients);

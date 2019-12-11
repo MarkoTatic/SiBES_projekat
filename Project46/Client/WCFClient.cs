@@ -45,6 +45,19 @@ namespace Client
             }
         }
 
+        public string GenerateKey()
+        {
+            string key = String.Empty;
+            try
+            {
+                key = factory.GenerateKey();
+            }catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return key;
+        }
+
         public string GetConnectedClients()
         {
             string users = string.Empty;

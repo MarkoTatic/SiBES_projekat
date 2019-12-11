@@ -1,5 +1,6 @@
 ﻿using Common;
 using Manager;
+using MonitoringCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -39,8 +40,22 @@ namespace Client
         {
             string users = String.Empty;
             string clientId;
-
+            string encryptedSecretKey;
+            //byte[] secretKey = null;
             WCFClient proxy = BindToCentralServer();
+            //napravi javni
+            //napravi privatni
+            try
+            {
+                encryptedSecretKey = proxy.GenerateKey();//prosledi parametar neki javni kljuc koji je namapiran na privatni kljuc
+            }
+            //dekriptuje sa private i ovde dobijemo fakticki secret
+            catch (FaultException e)
+            {
+                throw new FaultException(e.Message);
+            }
+           // secretKey = Encoding.ASCII.GetBytes(encryptedSecretKey);
+
 
             Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
@@ -68,7 +83,16 @@ namespace Client
 
 
             ServiceHost host = OpenPeerService(peerServicePort);
-
+            MonitoringChannel proxyMonitoring = OpenMonitoringChannel();    //open channel for logging all messages
+            
+            try
+            {
+                proxyMonitoring.SendSecretKey(encryptedSecretKey);
+            }
+            catch (FaultException e)
+            {
+                throw new FaultException(e.Message);
+            }
             while (true)
             {
                 int m = Menu();
@@ -94,7 +118,6 @@ namespace Client
                     }
                     User user = DBClients.connectedClients[otherClient];
                     Peer proxyPeerClient = OpenPeerClient(user.Counter);
-                    MonitoringChannel proxyMonitoring = OpenMonitoringChannel();    //open channel for logging all messages
                     while (true)
                     {
                         Console.WriteLine("Enter message to send, type 'x' for disconection:");
@@ -110,9 +133,12 @@ namespace Client
                         {
                             throw new Exception(e.Message);
                         }
+                        byte[] encryptedMessage = AES_ENCRYPTION.EncryptFile(messageToSend, encryptedSecretKey);
+                        byte[] encryptedSenderName = AES_ENCRYPTION.EncryptFile(senderName, encryptedSecretKey);
+                        byte[] encryptedRecieverName = AES_ENCRYPTION.EncryptFile(user.Name, encryptedSecretKey);
                         try
                         {
-                            proxyMonitoring.LogMessage(messageToSend, senderName, user.Name);
+                            proxyMonitoring.LogMessage(encryptedMessage, encryptedSenderName, encryptedRecieverName);
                         }
                         catch (Exception e)
                         {
@@ -141,8 +167,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            //string srvCertCN = "wcfServer1";
-            string srvCertCN = "WCFService";
+            string srvCertCN = "wcfServer1";
+            //string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";

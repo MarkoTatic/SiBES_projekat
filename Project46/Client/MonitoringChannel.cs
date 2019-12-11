@@ -18,7 +18,7 @@ namespace Client
             factory = this.CreateChannel();
     }
 
-        public void LogMessage(string message, string sender, string reciever)
+        public void LogMessage(byte[] message, byte[] sender, byte[] reciever)
         {
             try
             {
@@ -26,6 +26,18 @@ namespace Client
             } catch(Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        public void SendSecretKey(string key)
+        {
+            try
+            {
+                factory.SendSecretKey(key);
+            }
+            catch (FaultException e)
+            {
+                throw new FaultException(e.Message);
             }
         }
     }

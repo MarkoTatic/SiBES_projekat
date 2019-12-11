@@ -10,16 +10,32 @@ namespace MonitoringServer
 {
     public class WCFMonitoringServer : IMonitoring
     { 
-        static string forLogging;
-        public void LogMessage(string message, string sender, string reciever)
+        private static string forLogging;
+        private string encriptedSecretKey;
+        public void LogMessage(byte[] message, byte[] sender, byte[] reciever)
         {
-            forLogging += sender + " to " + reciever;
-            forLogging += ":["+ DateTime.Now.ToShortTimeString() + "]\t" + message + "\n";
+            string decryptedSender = AES_DECRYPTION.DecryptData(sender, encriptedSecretKey);
+            string decryptedReciever = AES_DECRYPTION.DecryptData(reciever, encriptedSecretKey);
+
+            forLogging += decryptedSender + " to " + decryptedReciever;
+            forLogging += ":[" + DateTime.Now.ToShortTimeString() + "]\t";
+
+            foreach (var item in message)
+            {
+                forLogging += item;
+            }
+            
+            forLogging += "\n";
             using (StreamWriter sw = new StreamWriter("Logging.txt"))
             {
                 sw.Write(forLogging);
             }
 
+        }
+
+        public void SendSecretKey(string key)
+        {
+            encriptedSecretKey = key;
         }
     }
 }

@@ -11,6 +11,9 @@ namespace MonitoringCommon
     public interface IMonitoring
     {
         [OperationContract]
-        void LogMessage(string message, string sender, string reciever);
+        void LogMessage(byte[] message, byte[] sender, byte[] reciever);
+
+        [OperationContract]
+        void SendSecretKey(string key);
     }
 }
