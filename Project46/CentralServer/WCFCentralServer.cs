@@ -19,9 +19,11 @@ namespace CentralServer
             DBClients.ConnectedClients.Remove(sid);
         }
 
-        public string GenerateKey()
+        public string GenerateSecretKey(string publicKey)
         {
-            return SecretKey.GenerateKey();
+            RSA_Asimm_Algorithm_S rsa = new RSA_Asimm_Algorithm_S();
+
+            return rsa.Encryption(publicKey);
         }
 
         public string GetConnectedClients()

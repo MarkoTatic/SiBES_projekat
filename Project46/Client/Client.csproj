@@ -55,6 +55,7 @@
     <Compile Include="P2PTransport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RSA_Asimm_Algorithm_C.cs" />
     <Compile Include="WCFClient.cs" />
   </ItemGroup>
   <ItemGroup>

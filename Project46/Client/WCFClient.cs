@@ -45,12 +45,12 @@ namespace Client
             }
         }
 
-        public string GenerateKey()
+        public string GenerateSecretKey(string publicKey)
         {
             string key = String.Empty;
             try
             {
-                key = factory.GenerateKey();
+                key = factory.GenerateSecretKey(publicKey);
             }catch(Exception e)
             {
                 throw new Exception(e.Message);

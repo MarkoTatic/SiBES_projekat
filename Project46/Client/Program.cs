@@ -41,21 +41,21 @@ namespace Client
             string users = String.Empty;
             string clientId;
             string encryptedSecretKey;
+            string decryptedSecretKey;
+            RSA_Asimm_Algorithm_C rsa = new RSA_Asimm_Algorithm_C();
+            string publicKey = rsa.GenerateKeys();
+
             //byte[] secretKey = null;
             WCFClient proxy = BindToCentralServer();
-            //napravi javni
-            //napravi privatni
             try
             {
-                encryptedSecretKey = proxy.GenerateKey();//prosledi parametar neki javni kljuc koji je namapiran na privatni kljuc
+                encryptedSecretKey = proxy.GenerateSecretKey(publicKey); //klijent dobija kriptovan tajni kljuc
             }
-            //dekriptuje sa private i ovde dobijemo fakticki secret
             catch (FaultException e)
             {
                 throw new FaultException(e.Message);
             }
-           // secretKey = Encoding.ASCII.GetBytes(encryptedSecretKey);
-
+            decryptedSecretKey = rsa.DecryptData(encryptedSecretKey);
 
             Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
@@ -87,7 +87,7 @@ namespace Client
             
             try
             {
-                proxyMonitoring.SendSecretKey(encryptedSecretKey);
+                proxyMonitoring.SendSecretKey(decryptedSecretKey);
             }
             catch (FaultException e)
             {
@@ -133,9 +133,9 @@ namespace Client
                         {
                             throw new Exception(e.Message);
                         }
-                        byte[] encryptedMessage = AES_ENCRYPTION.EncryptFile(messageToSend, encryptedSecretKey);
-                        byte[] encryptedSenderName = AES_ENCRYPTION.EncryptFile(senderName, encryptedSecretKey);
-                        byte[] encryptedRecieverName = AES_ENCRYPTION.EncryptFile(user.Name, encryptedSecretKey);
+                        byte[] encryptedMessage = AES_ENCRYPTION.EncryptFile(messageToSend, decryptedSecretKey);
+                        byte[] encryptedSenderName = AES_ENCRYPTION.EncryptFile(senderName, decryptedSecretKey);
+                        byte[] encryptedRecieverName = AES_ENCRYPTION.EncryptFile(user.Name, decryptedSecretKey);
                         try
                         {
                             proxyMonitoring.LogMessage(encryptedMessage, encryptedSenderName, encryptedRecieverName);
@@ -167,8 +167,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            string srvCertCN = "wcfServer1";
-            //string srvCertCN = "WCFService";
+            //string srvCertCN = "wcfServer1";
+            string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";

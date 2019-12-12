@@ -21,6 +21,6 @@ namespace Common
         void Disconnect(string sid);
 
         [OperationContract]
-        string GenerateKey();
+        string GenerateSecretKey(string publicKey);
     }
 }
