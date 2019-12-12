@@ -10,8 +10,8 @@ namespace CentralServer
     public class Audit : IDisposable
     {
         private static EventLog customLog = null;
-        const string SourceName = "CentralServer.Audit";
-        const string LogName = "CentralServerWindowsLogs";
+        const string SourceName = "Application";
+        const string LogName = "Application";
         static Audit()
         {
             try
