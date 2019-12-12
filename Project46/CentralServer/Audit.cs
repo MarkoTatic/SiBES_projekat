@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace CentralServer
 
         public static void ClientConnectedSuccesffuly(string userName, string sid)
         {
-            string logMessage = "Client with name:" + userName + " and SID:" + sid + " connected successfuly on central server.";
+            string logMessage = "Client with name:" + Formatter.ParseName(userName) + " and SID:" + sid + " connected successfuly on central server.";
             if (customLog != null)
             {
                 customLog.WriteEntry(logMessage);
@@ -45,7 +46,7 @@ namespace CentralServer
 
         public static void ClientDisconectedSuccesffuly(string sid)
         {
-            string logMessage = "Client with SID:" + sid + " disconected successfuly on central server.";
+            string logMessage = "Client with name:" + Formatter.ParseName(DBClients.ConnectedClients[sid].Name) + " and SID:" + sid + " disconnected successfuly on central server.";
             if (customLog != null)
             {
                 customLog.WriteEntry(logMessage);
