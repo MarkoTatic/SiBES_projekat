@@ -41,7 +41,7 @@ namespace Client
             string users = String.Empty;
             string clientId;
             int otherClient;
-            string encryptedSecretKey = string.Empty;
+            string encryptedSecretKey = String.Empty;
             string decryptedSecretKey;
             RSA_Asimm_Algorithm_C rsa = new RSA_Asimm_Algorithm_C();
             string publicKey = rsa.GenerateKeys();
@@ -51,12 +51,12 @@ namespace Client
             {
                 encryptedSecretKey = proxy.GenerateSecretKey(publicKey); //klijent dobija kriptovan tajni kljuc
             }
-            catch (FaultException e)
+            catch (Exception e)
             {
-                throw new FaultException(e.Message);
+                Console.WriteLine(e.Message);
             }
 
-            if (encryptedSecretKey.Equals(string.Empty))
+            if (encryptedSecretKey.Equals(String.Empty))
             {
                 Console.WriteLine("Press any key to close connection. ");
                 Console.ReadKey();
@@ -176,8 +176,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            //string srvCertCN = "wcfServer1";
-            string srvCertCN = "WCFService";
+            string srvCertCN = "wcfServer1";
+            //string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";
