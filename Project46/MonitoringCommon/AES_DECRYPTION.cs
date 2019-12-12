@@ -12,13 +12,8 @@ namespace MonitoringCommon
     {
         public static string DecryptData (byte[] cipherTextCombined, string secretKey)
         {
-
-            // Declare the string used to hold 
-            // the decrypted text. 
             string plaintext = null;
 
-            // Create an Aes object 
-            // with the specified key and IV. 
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = Encoding.ASCII.GetBytes(secretKey);

@@ -12,7 +12,7 @@ namespace Common
     public interface IWCFCentralServer
     {
         [OperationContract]
-        string TestConnection(string name, string sid);
+        string Connect(string name, string sid);
 
         [OperationContract]
         string GetConnectedClients();

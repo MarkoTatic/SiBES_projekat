@@ -73,12 +73,12 @@ namespace Client
             return users;
         }
 
-        public string TestConnection(string name, string sid)
+        public string Connect(string name, string sid)
         {
             string retVal = string.Empty;
             try
             {
-               retVal = factory.TestConnection(name, sid); 
+               retVal = factory.Connect(name, sid); 
             } catch(Exception e)
             {
                 Console.WriteLine("Test connection failed. Exception details: " + e.Message);

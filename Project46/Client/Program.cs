@@ -22,8 +22,8 @@ namespace Client
             while (val != 1 && val != 0)
             {
                 Console.WriteLine("Choose option by entering number: ");
-                Console.WriteLine("0 - Close connection.");
-                Console.WriteLine("1 - Preview connected clients.");
+                Console.WriteLine("\t0 - Close connection.");
+                Console.WriteLine("\t1 - Preview connected clients.");
                 try
                 {
                     val = Int32.Parse(Console.ReadLine());
@@ -40,12 +40,12 @@ namespace Client
         {
             string users = String.Empty;
             string clientId;
-            string encryptedSecretKey;
+            int otherClient;
+            string encryptedSecretKey = string.Empty;
             string decryptedSecretKey;
             RSA_Asimm_Algorithm_C rsa = new RSA_Asimm_Algorithm_C();
             string publicKey = rsa.GenerateKeys();
 
-            //byte[] secretKey = null;
             WCFClient proxy = BindToCentralServer();
             try
             {
@@ -55,6 +55,15 @@ namespace Client
             {
                 throw new FaultException(e.Message);
             }
+
+            if (encryptedSecretKey.Equals(string.Empty))
+            {
+                Console.WriteLine("Press any key to close connection. ");
+                Console.ReadKey();
+                proxy.Abort();
+                return 0;
+            }
+
             decryptedSecretKey = rsa.DecryptData(encryptedSecretKey);
 
             Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
@@ -64,7 +73,7 @@ namespace Client
             int peerServicePort = 6000;
             try
             {
-                clientId = proxy.TestConnection(identity.Name, winIdentity.User.ToString());
+                clientId = proxy.Connect(identity.Name, winIdentity.User.ToString());
             }
             catch (FaultException e)
             {
@@ -108,19 +117,19 @@ namespace Client
                     }
                     DeserializeJson(users);
                     PrintConnectedClients();
-                    int otherClient = ChooseClient();
+                    otherClient = ChooseClient();
                     if (otherClient == 0)
                         continue;
                     if (otherClient == Int32.Parse(clientId))
                     {
-                        Console.WriteLine("This is your account. Please try again.");
+                        Console.WriteLine("This is your account. Please choose again.");
                         continue;
                     }
-                    User user = DBClients.connectedClients[otherClient];
-                    Peer proxyPeerClient = OpenPeerClient(user.Counter);
+                    User otherUser = DBClients.connectedClients[otherClient];
+                    Peer proxyPeerClient = OpenPeerClient(otherUser.Counter);
                     while (true)
                     {
-                        Console.WriteLine("Enter message to send, type 'x' for disconection:");
+                        Console.WriteLine("Enter message to send [type 'x' for disconection]:");
                         string messageToSend = Console.ReadLine();
                         if (messageToSend.Equals("x") || messageToSend.Equals("X"))
                         {
@@ -135,7 +144,7 @@ namespace Client
                         }
                         byte[] encryptedMessage = AES_ENCRYPTION.EncryptFile(messageToSend, decryptedSecretKey);
                         byte[] encryptedSenderName = AES_ENCRYPTION.EncryptFile(senderName, decryptedSecretKey);
-                        byte[] encryptedRecieverName = AES_ENCRYPTION.EncryptFile(user.Name, decryptedSecretKey);
+                        byte[] encryptedRecieverName = AES_ENCRYPTION.EncryptFile(otherUser.Name, decryptedSecretKey);
                         try
                         {
                             proxyMonitoring.LogMessage(encryptedMessage, encryptedSenderName, encryptedRecieverName);
@@ -167,8 +176,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            string srvCertCN = "wcfServer1";
-            //string srvCertCN = "WCFService";
+            //string srvCertCN = "wcfServer1";
+            string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";
@@ -214,7 +223,6 @@ namespace Client
             bindingPeerClient.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
             bindingPeerClient.Security.Transport.ProtectionLevel = System.Net.Security.ProtectionLevel.EncryptAndSign;
 
-            Console.WriteLine("Korisnik {0} je pokrenuo klijenta", WindowsIdentity.GetCurrent().Name);
             Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
             EndpointAddress endpointAdress = new EndpointAddress(new Uri(addressPeerClient), EndpointIdentity.CreateUpnIdentity(identity.Name));
@@ -251,19 +259,19 @@ namespace Client
         {
             int i = 1;
             Console.WriteLine("Connected clients at the moment are: ");
-            Console.WriteLine("------------------------------------");
+            Console.WriteLine("\t------------------------------------");
             foreach (User item in DBClients.connectedClients.Values)
             {
-                Console.WriteLine(i + ". " + item.Name + ", SID: " + item.SID);
+                Console.WriteLine("\t" + i + ". " + item.Name + ", SID: " + item.SID);
                 i++;
             }
-            Console.WriteLine("------------------------------------");
+            Console.WriteLine("\t------------------------------------");
         }
 
         private static int ChooseClient()
         {
             Console.WriteLine("Please choose a client you want to connect with by picking ordinal number.");
-            Console.WriteLine("0 - Quit option for sending messages.");
+            Console.WriteLine("\t0 - Back");
             int retVal;
             while (true)
             {

@@ -18,11 +18,21 @@ namespace MonitoringServer
             ServiceHost host = new ServiceHost(typeof(WCFMonitoringServer));
             host.AddServiceEndpoint(typeof(IMonitoring), binding, address);
 
-            host.Open();
-            Console.WriteLine("Logging chat..");
-
-            Console.ReadKey();
-            host.Close();
+            try
+            {
+                host.Open();
+                Console.WriteLine("Ready to logg messages.\nPress <enter> to stop ...");
+                Console.ReadLine();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("[ERROR] {0}", e.Message);
+                Console.WriteLine("[StackTrace] {0}", e.StackTrace);
+            }
+            finally
+            {
+                host.Close();
+            }
         }
     }
 }

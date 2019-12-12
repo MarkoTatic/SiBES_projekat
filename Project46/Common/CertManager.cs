@@ -36,31 +36,5 @@ namespace Manager
             return null;
         }
 
-        /// <summary>
-        /// Get a certificate from file.		
-        /// </summary>
-        /// <param name="fileName"> .cer file name </param>
-        /// <returns> The requested certificate. If no valid certificate is found, returns null. </returns>
-        public static X509Certificate2 GetCertificateFromFile(string fileName)
-        {
-            X509Certificate2 certificate = null;
-
-
-            return certificate;
-        }
-
-        /// <summary>
-        /// Get a certificate from file.
-        /// </summary>
-        /// <param name="fileName">.pfx file name</param>
-        /// <param name="pwd"> password for .pfx file</param>
-        /// <returns>The requested certificate. If no valid certificate is found, returns null.</returns>
-		public static X509Certificate2 GetCertificateFromFile(string fileName, SecureString pwd)
-        {
-            X509Certificate2 certificate = null;
-
-
-            return certificate;
-        }
     }
 }

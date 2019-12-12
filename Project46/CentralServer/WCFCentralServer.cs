@@ -40,7 +40,7 @@ namespace CentralServer
             return jsonString;
         }
 
-        public string TestConnection(string name, string sid)
+        public string Connect(string name, string sid)
         {
             try
             {
