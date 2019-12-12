@@ -12,6 +12,7 @@ namespace MonitoringServer
     { 
         private static string forLogging;
         private string encriptedSecretKey;
+        private string path = "Logging.txt";
         public void LogMessage(byte[] message, byte[] sender, byte[] reciever)
         {
             string decryptedSender = AES_DECRYPTION.DecryptData(sender, encriptedSecretKey);
@@ -26,7 +27,7 @@ namespace MonitoringServer
             }
             
             forLogging += "\n";
-            using (StreamWriter sw = new StreamWriter("Logging.txt"))
+            using (StreamWriter sw = (File.Exists(path)) ? File.AppendText(path) : File.CreateText(path))
             {
                 sw.Write(forLogging);
             }
