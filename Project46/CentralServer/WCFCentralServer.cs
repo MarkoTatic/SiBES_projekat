@@ -16,6 +16,14 @@ namespace CentralServer
 
         public void Disconnect(string sid)
         {
+            try
+            {
+                Audit.ClientDisconectedSuccesffuly(sid);
+            }
+            catch (ArgumentException ae)
+            {
+                throw new ArgumentException(ae.Message);
+            }
             DBClients.ConnectedClients.Remove(sid);
         }
 
@@ -34,6 +42,14 @@ namespace CentralServer
 
         public string TestConnection(string name, string sid)
         {
+            try
+            {
+                Audit.ClientConnectedSuccesffuly(name, sid);
+            }catch(ArgumentException ae)
+            {
+                throw new ArgumentException(ae.Message);
+            }
+
             ClientCounter += 1;
             User user = new User(Formatter.ParseName(name), sid);
             user.Counter = ClientCounter;
