@@ -41,3 +41,17 @@ C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\Client\obj\Debug\C
 C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\Client\obj\Debug\Client.csproj.CopyComplete
 C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\Client\obj\Debug\Client.exe
 C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\Client\obj\Debug\Client.pdb
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Client.exe.config
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Client.exe
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Client.pdb
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Common.dll
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\MonitoringCommon.dll
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Common.pdb
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\MonitoringCommon.pdb
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client.csprojAssemblyReference.cache
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client.csproj.CopyComplete
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client.exe
+C:\Users\Natasas\Desktop\SiBES_projekat\Project46\Client\obj\Debug\Client.pdb

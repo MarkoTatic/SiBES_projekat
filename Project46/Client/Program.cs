@@ -47,25 +47,7 @@ namespace Client
             string publicKey = rsa.GenerateKeys();
 
             WCFClient proxy = BindToCentralServer();
-            try
-            {
-                encryptedSecretKey = proxy.GenerateSecretKey(publicKey); //klijent dobija kriptovan tajni kljuc
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            if (encryptedSecretKey.Equals(String.Empty))
-            {
-                Console.WriteLine("Press any key to close connection. ");
-                Console.ReadKey();
-                proxy.Abort();
-                return 0;
-            }
-
-            decryptedSecretKey = rsa.DecryptData(encryptedSecretKey);
-
+            
             Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             IIdentity identity = Thread.CurrentPrincipal.Identity;
             WindowsIdentity winIdentity = identity as WindowsIdentity;
@@ -77,15 +59,27 @@ namespace Client
             }
             catch (FaultException e)
             {
-                throw new FaultException(e.Message);
-            }
-            if (clientId == "-1")   
-            {
+                Console.WriteLine("Connection failed. \nDetails: " + e.Message);
                 Console.WriteLine("Press any key to close connection. ");
                 Console.ReadKey();
                 proxy.Abort();
                 return 0;
             }
+
+            try
+            {
+                encryptedSecretKey = proxy.GenerateSecretKey(publicKey); //klijent dobija kriptovan tajni kljuc
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Encryption of secret key failed. \nDetails: " + e.Message);
+                Console.WriteLine("Press any key to close connection. ");
+                Console.ReadKey();
+                proxy.Abort();
+                return 0;
+            }
+
+            decryptedSecretKey = rsa.DecryptData(encryptedSecretKey);
 
             peerServicePort += Int32.Parse(clientId);
             Console.WriteLine("Current: peer_" + clientId);
@@ -100,8 +94,9 @@ namespace Client
             }
             catch (FaultException e)
             {
-                throw new FaultException(e.Message);
+                Console.WriteLine("Sending secret key to monitoring failed. \nDetails: " + e.Message);
             }
+
             while (true)
             {
                 int m = Menu();
@@ -113,7 +108,7 @@ namespace Client
                     }
                     catch (FaultException e)
                     {
-                        throw new FaultException(e.Message);
+                        Console.WriteLine("Getting list of connected clients from central server failed. \nDetails: " + e.Message);
                     }
                     DeserializeJson(users);
                     PrintConnectedClients();
@@ -138,9 +133,9 @@ namespace Client
                         try
                         {
                             proxyPeerClient.SendMessage(messageToSend);
-                        }catch(Exception e)
+                        }catch(FaultException e)
                         {
-                            throw new Exception(e.Message);
+                            Console.WriteLine("Sending message to client failed. \nDetails: " + e.Message);
                         }
                         byte[] encryptedMessage = AES_ENCRYPTION.EncryptFile(messageToSend, decryptedSecretKey);
                         byte[] encryptedSenderName = AES_ENCRYPTION.EncryptFile(senderName, decryptedSecretKey);
@@ -149,9 +144,9 @@ namespace Client
                         {
                             proxyMonitoring.LogMessage(encryptedMessage, encryptedSenderName, encryptedRecieverName);
                         }
-                        catch (Exception e)
+                        catch (FaultException e)
                         {
-                            throw new Exception(e.Message);
+                            Console.WriteLine("Logging message on server failed. \nDetails: " + e.Message);
                         }
                     }
                     proxyPeerClient.Close();
@@ -165,9 +160,9 @@ namespace Client
             try
             {
                 proxy.Disconnect(winIdentity.User.ToString());
-            } catch(Exception e)
+            } catch(FaultException e)
             {
-                throw new Exception(e.Message);
+                Console.WriteLine("Disconnection failed. \nDetails: " + e.Message);
             }
             host.Close();
             proxy.Close();
@@ -176,8 +171,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            string srvCertCN = "wcfServer1";
-            //string srvCertCN = "WCFService";
+            //string srvCertCN = "wcfServer1";
+            string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";
@@ -205,9 +200,10 @@ namespace Client
             try
             {
                 host.Open();
+                Console.WriteLine("You have opened connection to other clients.");
             } catch(Exception e)
             {
-                throw new Exception(e.Message);
+                Console.WriteLine("Failed opening host connection. \nDetails: " + e.Message);
             }
 
             return host;
