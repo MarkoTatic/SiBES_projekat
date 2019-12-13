@@ -57,7 +57,7 @@ namespace Client
             {
                 clientId = proxy.Connect(identity.Name, winIdentity.User.ToString());
             }
-            catch (FaultException e)
+            catch (Exception e)
             {
                 Console.WriteLine("Connection failed. \nDetails: " + e.Message);
                 Console.WriteLine("Press any key to close connection. ");
@@ -87,10 +87,22 @@ namespace Client
 
             ServiceHost host = OpenPeerService(peerServicePort);
             MonitoringChannel proxyMonitoring = OpenMonitoringChannel();    //open channel for logging all messages
-            
+            string publicKeyFromMonitoring = String.Empty;
+          
             try
             {
-                proxyMonitoring.SendSecretKey(decryptedSecretKey);
+                publicKeyFromMonitoring = proxyMonitoring.GenerateRSAKeys();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Getting public RSA key from monitoring failed. \nDetails: " + e.Message);
+            }
+
+            string encryptedSecretKeyWithMonitoringKey = rsa.EncryptData(publicKeyFromMonitoring, decryptedSecretKey);
+
+            try
+            {
+                proxyMonitoring.SendSecretKey(encryptedSecretKeyWithMonitoringKey);
             }
             catch (FaultException e)
             {
@@ -171,8 +183,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            //string srvCertCN = "wcfServer1";
-            string srvCertCN = "WCFService";
+            string srvCertCN = "wcfServer1";
+            //string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";

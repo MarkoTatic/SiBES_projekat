@@ -79,9 +79,9 @@ namespace Client
             try
             {
                retVal = factory.Connect(name, sid); 
-            } catch(FaultException e)
+            } catch(Exception e)
             {
-                throw new FaultException(e.Message);
+                throw new Exception(e.Message);
             }
             return retVal;
         }

@@ -9,14 +9,28 @@ using System.Threading.Tasks;
 namespace MonitoringServer
 {
     public class WCFMonitoringServer : IMonitoring
-    { 
+    {
         private static string forLogging;
-        private string encriptedSecretKey;
+        private string decriptedSecretKey;
         private string path = "Logging.txt";
+        RSA_Asimm_Algorithm_M rsa = new RSA_Asimm_Algorithm_M();
+
+        public string GenerateRSAKeys()
+        {
+            string publicRSAKey = rsa.GenerateKeys();
+            return publicRSAKey;
+        }
+
+        public void SendSecretKey(string key)
+        {
+            decriptedSecretKey = rsa.DecryptData(key);
+        }
+
+
         public void LogMessage(byte[] message, byte[] sender, byte[] reciever)
         {
-            string decryptedSender = AES_DECRYPTION.DecryptData(sender, encriptedSecretKey);
-            string decryptedReciever = AES_DECRYPTION.DecryptData(reciever, encriptedSecretKey);
+            string decryptedSender = AES_DECRYPTION.DecryptData(sender, decriptedSecretKey);
+            string decryptedReciever = AES_DECRYPTION.DecryptData(reciever, decriptedSecretKey);
 
             forLogging += decryptedSender + " to " + decryptedReciever;
             forLogging += ":[" + DateTime.Now.ToShortTimeString() + "]\t";
@@ -25,18 +39,27 @@ namespace MonitoringServer
             {
                 forLogging += item;
             }
-            
+
             forLogging += "\n";
-            using (StreamWriter sw = (File.Exists(path)) ? File.AppendText(path) : File.CreateText(path))
+
+            if (!File.Exists(path))
             {
-                sw.Write(forLogging);
+                File.Create(path).Dispose();
+
+                using (TextWriter tw = new StreamWriter(path))
+                {
+                    tw.Write(forLogging);
+                }
+
+            }
+            else if (File.Exists(path))
+            {
+                using (TextWriter tw = new StreamWriter(path))
+                {
+                    tw.Write(forLogging);
+                }
             }
 
-        }
-
-        public void SendSecretKey(string key)
-        {
-            encriptedSecretKey = key;
         }
     }
 }
