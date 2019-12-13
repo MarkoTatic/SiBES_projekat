@@ -54,10 +54,6 @@ namespace Client
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-            }
-
-            if (encryptedSecretKey.Equals(String.Empty))
-            {
                 Console.WriteLine("Press any key to close connection. ");
                 Console.ReadKey();
                 proxy.Abort();
@@ -93,10 +89,23 @@ namespace Client
 
             ServiceHost host = OpenPeerService(peerServicePort);
             MonitoringChannel proxyMonitoring = OpenMonitoringChannel();    //open channel for logging all messages
-            
+            string publicKeyFromMonitoring = String.Empty;
+
             try
             {
-                proxyMonitoring.SendSecretKey(decryptedSecretKey);
+                publicKeyFromMonitoring = proxyMonitoring.GenerateRSAKeys();
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
+            string encryptedSecretKeyWithMonitoringKey = String.Empty;
+            encryptedSecretKeyWithMonitoringKey = rsa.EncryptData(publicKeyFromMonitoring, decryptedSecretKey);
+
+            try
+            {
+                proxyMonitoring.SendSecretKey(encryptedSecretKeyWithMonitoringKey);
             }
             catch (FaultException e)
             {
