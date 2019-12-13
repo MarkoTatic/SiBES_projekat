@@ -11,26 +11,12 @@ namespace MonitoringServer
     public class WCFMonitoringServer : IMonitoring
     { 
         private static string forLogging;
-        private string decriptedSecretKey;
+        private string encriptedSecretKey;
         private string path = "Logging.txt";
-        RSA_Asimm_Algorithm_M rsa = new RSA_Asimm_Algorithm_M();
-
-        public string GenerateRSAKeys()
-        {
-            string publicRSAKey = rsa.GenerateKeys();
-            return publicRSAKey;
-        }
-
-        public void SendSecretKey(string key)
-        {
-            decriptedSecretKey = rsa.DecryptData(key);
-        }
-
-
         public void LogMessage(byte[] message, byte[] sender, byte[] reciever)
         {
-            string decryptedSender = AES_DECRYPTION.DecryptData(sender, decriptedSecretKey);
-            string decryptedReciever = AES_DECRYPTION.DecryptData(reciever, decriptedSecretKey);
+            string decryptedSender = AES_DECRYPTION.DecryptData(sender, encriptedSecretKey);
+            string decryptedReciever = AES_DECRYPTION.DecryptData(reciever, encriptedSecretKey);
 
             forLogging += decryptedSender + " to " + decryptedReciever;
             forLogging += ":[" + DateTime.Now.ToShortTimeString() + "]\t";
@@ -41,25 +27,16 @@ namespace MonitoringServer
             }
             
             forLogging += "\n";
-
-            if (!File.Exists(path))
+            using (StreamWriter sw = (File.Exists(path)) ? File.AppendText(path) : File.CreateText(path))
             {
-                File.Create(path).Dispose();
-
-                using (TextWriter tw = new StreamWriter(path))
-                {
-                    tw.Write(forLogging);
-                }
-
-            }
-            else if (File.Exists(path))
-            {
-                using (TextWriter tw = new StreamWriter(path))
-                {
-                    tw.Write(forLogging);
-                }
+                sw.Write(forLogging);
             }
 
+        }
+
+        public void SendSecretKey(string key)
+        {
+            encriptedSecretKey = key;
         }
     }
 }

@@ -41,30 +41,5 @@ namespace Client
 
             return decryptedData;
         }
-
-        public string EncryptData(string pubKey, string secretKeyToEncrypt)
-        {
-            var sr = new System.IO.StringReader(pubKey);
-            //we need a deserializer
-            var xs = new System.Xml.Serialization.XmlSerializer(typeof(RSAParameters));
-            //get the object back from the stream
-            var publicKey = (RSAParameters)xs.Deserialize(sr);
-
-            var csp = new RSACryptoServiceProvider();
-            //pubKey.Modulus[0] = 1;
-            csp.ImportParameters(publicKey);
-
-            string secretKey = secretKeyToEncrypt;
-
-            var bytesSecretKey = System.Text.Encoding.Unicode.GetBytes(secretKey);
-
-            //apply pkcs#1.5 padding and encrypt our data 
-            var bytesCypherSecretKey = csp.Encrypt(bytesSecretKey, false);
-
-            //we might want a string representation of our cypher text... base64 will do
-            var encSecretKey = Convert.ToBase64String(bytesCypherSecretKey);      //string kriptovanog tajnog kljuca
-
-            return encSecretKey;
-        }
     }
 }

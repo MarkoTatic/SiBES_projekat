@@ -11,12 +11,9 @@ namespace MonitoringCommon
     public interface IMonitoring
     {
         [OperationContract]
-        string GenerateRSAKeys();
+        void LogMessage(byte[] message, byte[] sender, byte[] reciever);
 
         [OperationContract]
         void SendSecretKey(string key);
-        
-        [OperationContract]
-        void LogMessage(byte[] message, byte[] sender, byte[] reciever);
     }
 }
