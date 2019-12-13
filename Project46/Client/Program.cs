@@ -125,14 +125,14 @@ namespace Client
                     DeserializeJson(users);
                     PrintConnectedClients();
                     otherClient = ChooseClient();
+                    User otherUser = DBClients.connectedClients[otherClient];
                     if (otherClient == 0)
                         continue;
-                    if (otherClient == Int32.Parse(clientId))
+                    if (otherUser.Counter == Int32.Parse(clientId))
                     {
                         Console.WriteLine("This is your account. Please choose again.");
                         continue;
                     }
-                    User otherUser = DBClients.connectedClients[otherClient];
                     Peer proxyPeerClient = OpenPeerClient(otherUser.Counter);
                     while (true)
                     {
@@ -145,9 +145,10 @@ namespace Client
                         try
                         {
                             proxyPeerClient.SendMessage(messageToSend);
-                        }catch(FaultException e)
+                        }catch(Exception e)
                         {
                             Console.WriteLine("Sending message to client failed. \nDetails: " + e.Message);
+                            break;
                         }
                         byte[] encryptedMessage = AES_ENCRYPTION.EncryptFile(messageToSend, decryptedSecretKey);
                         byte[] encryptedSenderName = AES_ENCRYPTION.EncryptFile(senderName, decryptedSecretKey);
@@ -159,9 +160,10 @@ namespace Client
                         catch (FaultException e)
                         {
                             Console.WriteLine("Logging message on server failed. \nDetails: " + e.Message);
+                            break;
                         }
                     }
-                    proxyPeerClient.Close();
+                    proxyPeerClient.Abort();
                 }
                 if (m == 0)
                     break;
