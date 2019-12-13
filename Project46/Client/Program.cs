@@ -66,6 +66,9 @@ namespace Client
                 return 0;
             }
 
+            peerServicePort += Int32.Parse(clientId);
+            Console.WriteLine("Current: peer_" + clientId);
+
             try
             {
                 encryptedSecretKey = proxy.GenerateSecretKey(publicKey); //klijent dobija kriptovan tajni kljuc
@@ -78,12 +81,7 @@ namespace Client
                 proxy.Abort();
                 return 0;
             }
-
             decryptedSecretKey = rsa.DecryptData(encryptedSecretKey);
-
-            peerServicePort += Int32.Parse(clientId);
-            Console.WriteLine("Current: peer_" + clientId);
-
 
             ServiceHost host = OpenPeerService(peerServicePort);
             MonitoringChannel proxyMonitoring = OpenMonitoringChannel();    //open channel for logging all messages
@@ -124,7 +122,7 @@ namespace Client
                     }
                     DeserializeJson(users);
                     PrintConnectedClients();
-                    otherClient = ChooseClient();
+                    otherClient = ChooseClient();//otherUser i otherClient se ne podudaraju ali otherUser = dict vrednost sa keyom otherClient
                     User otherUser = DBClients.connectedClients[otherClient];
                     if (otherClient == 0)
                         continue;
