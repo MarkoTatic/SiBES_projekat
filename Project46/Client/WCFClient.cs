@@ -79,10 +79,9 @@ namespace Client
             try
             {
                retVal = factory.Connect(name, sid); 
-            } catch(Exception e)
+            } catch(FaultException e)
             {
-                Console.WriteLine("Test connection failed. Exception details: " + e.Message);
-                retVal = "-1";
+                throw new FaultException(e.Message);
             }
             return retVal;
         }
