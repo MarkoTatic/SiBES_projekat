@@ -36,7 +36,7 @@ namespace Client
             try
             {
                 factory.LogMessage(message, sender, reciever);
-            } catch(FaultException e)
+            } catch(Exception e)
             {
                 Console.WriteLine(e.Message);
             }
