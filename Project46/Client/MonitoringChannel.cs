@@ -18,25 +18,12 @@ namespace Client
             factory = this.CreateChannel();
     }
 
-        public string GenerateRSAKeys()
-        {
-            string publicRsaKey = String.Empty;
-            try
-            {
-                publicRsaKey = factory.GenerateRSAKeys();
-            }catch(Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-            return publicRsaKey;
-        }
-
         public void LogMessage(byte[] message, byte[] sender, byte[] reciever)
         {
             try
             {
                 factory.LogMessage(message, sender, reciever);
-            } catch(Exception e)
+            } catch(FaultException e)
             {
                 Console.WriteLine(e.Message);
             }
