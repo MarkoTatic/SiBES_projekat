@@ -23,7 +23,7 @@ namespace Client
             {
                 factory.SendMessage(myMessage);
             }
-            catch (FaultException e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
