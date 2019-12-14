@@ -12,7 +12,7 @@ namespace CentralServer
     public class Audit : IDisposable
     {
         private static EventLog customLog = null;
-        private static string SourceName ="Application";
+        private static string SourceName = "Application";
         private static string LogName = "Application";
         static Audit()
         {
@@ -33,10 +33,12 @@ namespace CentralServer
 
         public static void ClientConnectedSuccesffuly(string userName, string sid)
         {
+
             string logMessage = "Client with name: " + Formatter.ParseName(userName) + " and SID: " + sid + " connected successfuly to central server.";
             if (customLog != null)
             {
-                customLog.WriteEntry(logMessage);
+                EventLog.WriteEntry(SourceName, logMessage, EventLogEntryType.Information, 101, 1);
+                //customLog.WriteEntry(logMessage, EventLogEntryType.Information, 101, 1);
             }
             else
             {
@@ -49,7 +51,8 @@ namespace CentralServer
             string logMessage = "Client with name: " + Formatter.ParseName(DBClients.ConnectedClients[sid].Name) + " and SID: " + sid + " disconnected successfuly from central server.";
             if (customLog != null)
             {
-                customLog.WriteEntry(logMessage);
+                EventLog.WriteEntry(SourceName, logMessage, EventLogEntryType.Information, 101, 1);
+                //customLog.WriteEntry(logMessage, EventLogEntryType.Information, 101, 1);
             }
             else
             {

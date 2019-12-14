@@ -1,0 +1,5 @@
+C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\MonitoringCommon\bin\Debug\MonitoringCommon.dll
+C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\MonitoringCommon\bin\Debug\MonitoringCommon.pdb
+C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\MonitoringCommon\obj\Debug\MonitoringCommon.csprojAssemblyReference.cache
+C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\MonitoringCommon\obj\Debug\MonitoringCommon.dll
+C:\Users\buduc\OneDrive\Desktop\SBES\SiBES_projekat\Project46\MonitoringCommon\obj\Debug\MonitoringCommon.pdb
