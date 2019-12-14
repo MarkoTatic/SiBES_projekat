@@ -123,9 +123,10 @@ namespace Client
                     DeserializeJson(users);
                     PrintConnectedClients();
                     otherClient = ChooseClient();//otherUser i otherClient se ne podudaraju ali otherUser = dict vrednost sa keyom otherClient
-                    User otherUser = DBClients.connectedClients[otherClient];
+                   
                     if (otherClient == 0)
                         continue;
+                    User otherUser = DBClients.connectedClients[otherClient];
                     if (otherUser.Counter == Int32.Parse(clientId))
                     {
                         Console.WriteLine("This is your account. Please choose again.");
@@ -183,8 +184,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            string srvCertCN = "wcfServer1";
-            //string srvCertCN = "WCFService";
+            //string srvCertCN = "wcfServer1";
+            string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";

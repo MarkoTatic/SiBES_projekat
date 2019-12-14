@@ -1,6 +1,7 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,8 @@ namespace CentralServer
     public class Audit : IDisposable
     {
         private static EventLog customLog = null;
-        const string SourceName = "Application";
-        const string LogName = "Application";
+        private static string SourceName ="Application";
+        private static string LogName = "Application";
         static Audit()
         {
             try
@@ -21,7 +22,6 @@ namespace CentralServer
                 {
                     EventLog.CreateEventSource(SourceName, LogName);
                 }
-
                 customLog = new EventLog(LogName, Environment.MachineName, SourceName);
             }
             catch (Exception e)
@@ -33,7 +33,7 @@ namespace CentralServer
 
         public static void ClientConnectedSuccesffuly(string userName, string sid)
         {
-            string logMessage = "Client with name:" + Formatter.ParseName(userName) + " and SID:" + sid + " connected successfuly on central server.";
+            string logMessage = "Client with name: " + Formatter.ParseName(userName) + " and SID: " + sid + " connected successfuly to central server.";
             if (customLog != null)
             {
                 customLog.WriteEntry(logMessage);
@@ -46,7 +46,7 @@ namespace CentralServer
 
         public static void ClientDisconectedSuccesffuly(string sid)
         {
-            string logMessage = "Client with name:" + Formatter.ParseName(DBClients.ConnectedClients[sid].Name) + " and SID:" + sid + " disconnected successfuly on central server.";
+            string logMessage = "Client with name: " + Formatter.ParseName(DBClients.ConnectedClients[sid].Name) + " and SID: " + sid + " disconnected successfuly from central server.";
             if (customLog != null)
             {
                 customLog.WriteEntry(logMessage);

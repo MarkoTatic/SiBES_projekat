@@ -22,7 +22,8 @@ namespace CentralServer
             }
             catch (ArgumentException ae)
             {
-                throw new ArgumentException(ae.Message);
+                Console.WriteLine(ae.Message);
+                //throw new ArgumentException(ae.Message);
             }
             DBClients.ConnectedClients.Remove(sid);
         }
@@ -47,7 +48,8 @@ namespace CentralServer
                 Audit.ClientConnectedSuccesffuly(name, sid);
             }catch(ArgumentException ae)
             {
-                throw new ArgumentException(ae.Message);
+                Console.WriteLine(ae.Message);
+                //throw new ArgumentException(ae.Message);
             }
 
             ClientCounter += 1;

@@ -35,10 +35,11 @@ namespace CentralServer
             ///Set appropriate service's certificate on the host. Use CertManager class to obtain the certificate based on the "srvCertCN"
             host.Credentials.ServiceCertificate.Certificate = CertManager.GetCertificateFromStorage(StoreName.My, StoreLocation.LocalMachine, srvCertCN);
 
+
             try
             {
                 host.Open();
-                Console.WriteLine("WCFService is started.\nPress <enter> to stop ...");
+                Console.WriteLine("Central Server has started.\nPress <enter> to stop ...");
                 Console.ReadLine();
             }
             catch (Exception e)
