@@ -42,24 +42,17 @@ namespace MonitoringServer
 
             forLogging += "\n";
 
-            if (!File.Exists(path))
+            if (!File.Exists(path))//idalje se resetuje na svaku sesiju nznm zasto :(
             {
                 File.Create(path).Dispose();
-
-                using (TextWriter tw = new StreamWriter(path))
-                {
-                    tw.Write(forLogging);
-                }
+                File.AppendAllText(path, forLogging);
 
             }
             else if (File.Exists(path))
             {
-                using (TextWriter tw = new StreamWriter(path))
-                {
-                    tw.Write(forLogging);
-                }
+                File.AppendAllText(path, forLogging);
             }
-
+            forLogging = String.Empty;
         }
     }
 }

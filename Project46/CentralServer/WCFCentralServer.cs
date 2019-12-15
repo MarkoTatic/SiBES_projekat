@@ -43,13 +43,17 @@ namespace CentralServer
 
         public string Connect(string name, string sid)
         {
-            try
+            if (!DBClients.ConnectedClients.ContainsKey(sid))
             {
-                Audit.ClientConnectedSuccesffuly(name, sid);
-            }catch(ArgumentException ae)
-            {
-                Console.WriteLine(ae.Message);
-                //throw new ArgumentException(ae.Message);
+                try//proveriti da li je vec taj sid u dictionariju ako jeste nemoj ga dodavati
+                {
+                    Audit.ClientConnectedSuccesffuly(name, sid);
+                }
+                catch (ArgumentException ae)
+                {
+                    Console.WriteLine(ae.Message);
+                    //throw new ArgumentException(ae.Message);
+                }
             }
 
             ClientCounter += 1;

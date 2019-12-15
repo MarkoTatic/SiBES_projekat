@@ -22,7 +22,7 @@ namespace Manager
 			/// This will take service's certificate from storage
 			X509Certificate2 srvCert = CertManager.GetCertificateFromStorage(StoreName.My, StoreLocation.LocalMachine, Formatter.ParseName(WindowsIdentity.GetCurrent().Name));
 
-			if (!certificate.Issuer.Equals(srvCert.Issuer))
+			if (!certificate.Issuer.Equals(srvCert.Issuer))//server proverava da li je klijentski sertifikat potpisan od strane istog CA kao i sopstveni
 			{
 				throw new Exception("Certificate is not from the valid issuer.");
 			}

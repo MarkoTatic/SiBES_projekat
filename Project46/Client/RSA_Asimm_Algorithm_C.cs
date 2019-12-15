@@ -42,6 +42,7 @@ namespace Client
             return decryptedData;
         }
 
+        //enkripcija secret keya prilikom slanja istog monitoringu.
         public string EncryptData(string pubKey, string secretKeyToEncrypt)
         {
             var sr = new System.IO.StringReader(pubKey);
