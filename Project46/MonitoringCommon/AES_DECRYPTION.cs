@@ -27,18 +27,14 @@ namespace MonitoringCommon
                 aesAlg.IV = IV;
                 aesAlg.Mode = CipherMode.CBC;
 
-                // Create a decrytor to perform the stream transform.
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                // Create the streams used for decryption. 
                 using (var msDecrypt = new MemoryStream(cipherText))
                 {
                     using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
                         using (var srDecrypt = new StreamReader(csDecrypt))
                         {
-                            // Read the decrypted bytes from the decrypting stream
-                            // and place them in a string.
                             plaintext = srDecrypt.ReadToEnd();
                         }
                     }

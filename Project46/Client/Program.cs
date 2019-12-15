@@ -44,6 +44,7 @@ namespace Client
             string encryptedSecretKey = String.Empty;
             string decryptedSecretKey;
             RSA_Asimm_Algorithm_C rsa = new RSA_Asimm_Algorithm_C();
+
             string publicKey = rsa.GenerateKeys();
 
             WCFClient proxy = BindToCentralServer();
@@ -69,6 +70,8 @@ namespace Client
             peerServicePort += Int32.Parse(clientId);
             Console.WriteLine("Current: peer_" + clientId);
 
+            ServiceHost host = OpenPeerService(peerServicePort);
+            MonitoringChannel proxyMonitoring = OpenMonitoringChannel();    //open channel for logging all messages
             try
             {
                 encryptedSecretKey = proxy.GenerateSecretKey(publicKey); //klijent dobija kriptovan tajni kljuc
@@ -83,8 +86,6 @@ namespace Client
             }
             decryptedSecretKey = rsa.DecryptData(encryptedSecretKey);
 
-            ServiceHost host = OpenPeerService(peerServicePort);
-            MonitoringChannel proxyMonitoring = OpenMonitoringChannel();    //open channel for logging all messages
             string publicKeyFromMonitoring = String.Empty;
           
             try
@@ -184,8 +185,8 @@ namespace Client
         #region opening_channels
         private static WCFClient BindToCentralServer()
         {
-            string srvCertCN = "wcfServer1";
-            //string srvCertCN = "WCFService";
+            //string srvCertCN = "wcfServer1";
+            string srvCertCN = "WCFService";
             NetTcpBinding binding = new NetTcpBinding();
             binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Certificate;
             string address = "net.tcp://localhost:5000/WCFCentralServer";
@@ -232,9 +233,7 @@ namespace Client
             bindingPeerClient.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
             bindingPeerClient.Security.Transport.ProtectionLevel = System.Net.Security.ProtectionLevel.EncryptAndSign;
 
-            Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-            IIdentity identity = Thread.CurrentPrincipal.Identity;
-            EndpointAddress endpointAdress = new EndpointAddress(new Uri(addressPeerClient), EndpointIdentity.CreateUpnIdentity(identity.Name));
+            EndpointAddress endpointAdress = new EndpointAddress(new Uri(addressPeerClient));
 
             Peer proxyPeerClient = new Peer(bindingPeerClient, endpointAdress);
 
