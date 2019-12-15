@@ -233,9 +233,9 @@ namespace Client
             bindingPeerClient.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
             bindingPeerClient.Security.Transport.ProtectionLevel = System.Net.Security.ProtectionLevel.EncryptAndSign;
 
-            EndpointAddress endpointAdress = new EndpointAddress(new Uri(addressPeerClient));
+            //EndpointAddress endpointAdress = new EndpointAddress(new Uri(addressPeerClient));
 
-            Peer proxyPeerClient = new Peer(bindingPeerClient, endpointAdress);
+            Peer proxyPeerClient = new Peer(bindingPeerClient, addressPeerClient);
 
             return proxyPeerClient;
         }

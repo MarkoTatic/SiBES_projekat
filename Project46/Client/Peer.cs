@@ -11,7 +11,7 @@ namespace Client
     {
         IP2PTransport factory;
         public Peer(NetTcpBinding binding,
-                        EndpointAddress address) : base(binding, address)
+                        string address) : base(binding, address)
         {
             factory = this.CreateChannel();
         }
@@ -25,7 +25,7 @@ namespace Client
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
         }
     }
